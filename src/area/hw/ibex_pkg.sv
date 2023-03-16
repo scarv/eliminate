@@ -58,9 +58,10 @@ package ibex_pkg;
 
   typedef enum logic [6:0] {
     // ++ eliminate
-    OPCODE_SEC      = 7'h0b,  // CUSTOM_0: secure bitwise-logical + memory access instructions
-    OPCODE_SEC_ERSL = 7'h2b,  // CUSTOM_1: secure erasure instruction (low)
-    OPCODE_SEC_ERSH = 7'h5b,  // CUSTOM_2: secure erasure instruction (high)
+    OPCODE_SEC_BWLG = 7'h0b,  // CUSTOM_0: secure BitWise-LoGical instructions 
+    OPCODE_SEC_LDST = 7'h2b,  // CUSTOM_1: secure LoaD and STore instructions
+    OPCODE_SEC_ERSL = 7'h5b,  // CUSTOM_1: secure ERAsure instruction (for Low  registers)
+    OPCODE_SEC_ERSH = 7'h7b,  // CUSTOM_3: secure ERAsure instruction (for High registers)
     // -- eliminate  
     OPCODE_LOAD     = 7'h03,
     OPCODE_MISC_MEM = 7'h0f,

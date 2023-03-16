@@ -5,16 +5,22 @@
 #include "timer.h"        // header file of timer 
 #include <stdbool.h>      // header file of bool type 
 
+
+// prototypes of micro-benchmarks 
+
 // class-1
 extern void sec_and_test_asm(uint32_t *r, uint32_t *a, uint32_t *b);
-extern void sec_or_test_asm (uint32_t *r, uint32_t *a, uint32_t *b);
+extern void sec_andi_test_asm(uint32_t *r, uint32_t *a);
+extern void sec_or_test_asm(uint32_t *r, uint32_t *a, uint32_t *b);
+extern void sec_ori_test_asm (uint32_t *r, uint32_t *a);
 extern void sec_xor_test_asm(uint32_t *r, uint32_t *a, uint32_t *b);
+extern void sec_xori_test_asm(uint32_t *r, uint32_t *a);
 extern void sec_slli_test_asm(uint32_t *r, uint32_t *a);
 extern void sec_srli_test_asm(uint32_t *r, uint32_t *a);
 
 // class-2 
-extern void sec_sw_test_asm(uint32_t *r);
 extern void sec_lw_test_asm(uint32_t *r);
+extern void sec_sw_test_asm(uint32_t *r);
 
 // class-3
 extern void sec_zlo_test_asm(uint32_t *r);
@@ -58,7 +64,7 @@ int main()
       // happening in the middle
       set_global_interrupt_enable(0);
 
-      // print the prologue to uart 
+      // execute the micro-benchmarks and print the results
       puts("*******************************************\n");
       puts("custom secure instructions test: \n");
       puts("-------------------------------------------\n");
@@ -78,6 +84,17 @@ int main()
       puthex(r);
       putchar('\n');
       puts("-------------------------------------------\n");
+      puts("sec.andi test:  r = a & EXTS(0FF) \n");
+      r = 0xFFFFFFFFUL;
+      puts("current         r = ");
+      puthex(r);
+      putchar('\n');
+      puts("expected result r = 00000067 \n");
+      sec_andi_test_asm(&r, &a);
+      puts("obtained result r = "); 
+      puthex(r);
+      putchar('\n');
+      puts("-------------------------------------------\n");
       puts("sec.or   test:  r = a | b \n");
       r = 0xFFFFFFFFUL;
       puts("current         r = ");
@@ -89,6 +106,17 @@ int main()
       puthex(r);
       putchar('\n');
       puts("-------------------------------------------\n");
+      puts("sec.ori  test:  r = a | EXTS(0FF) \n");
+      r = 0xFFFFFFFFUL;
+      puts("current         r = ");
+      puthex(r);
+      putchar('\n');
+      puts("expected result r = 012345FF \n");
+      sec_ori_test_asm(&r, &a);
+      puts("obtained result r = "); 
+      puthex(r);
+      putchar('\n');
+      puts("-------------------------------------------\n");
       puts("sec.xor  test:  r = a ^ b \n");
       r = 0xFFFFFFFFUL;
       puts("current         r = ");
@@ -96,6 +124,17 @@ int main()
       putchar('\n');
       puts("expected result r = 0E2C4A68 \n");
       sec_xor_test_asm(&r, &a, &b);
+      puts("obtained result r = "); 
+      puthex(r);
+      putchar('\n');
+      puts("-------------------------------------------\n");
+      puts("sec.xori test:  r = a ^ EXTS(FFF) = ~a \n");
+      r = 0xFFFFFFFFUL;
+      puts("current         r = ");
+      puthex(r);
+      putchar('\n');
+      puts("expected result r = FEDCBA98 \n");
+      sec_xori_test_asm(&r, &a);
       puts("obtained result r = "); 
       puthex(r);
       putchar('\n');
@@ -286,6 +325,7 @@ int main()
       puts("-------------------------------------------\n");
       puts("test ended! \n");
       puts("*******************************************\n\n");
+      
       // re-enable interrupts with output complete
       set_global_interrupt_enable(1);
     }

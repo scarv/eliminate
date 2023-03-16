@@ -2,14 +2,17 @@
 
 // class-1
 // extern void sec_and_test_asm(uint32_t *r, uint32_t *a, uint32_t *b);
-// extern void sec_or_test_asm (uint32_t *r, uint32_t *a, uint32_t *b);
+// extern void sec_andi_test_asm(uint32_t *r, uint32_t *a);
+// extern void sec_or_test_asm(uint32_t *r, uint32_t *a, uint32_t *b);
+// extern void sec_ori_test_asm (uint32_t *r, uint32_t *a);
 // extern void sec_xor_test_asm(uint32_t *r, uint32_t *a, uint32_t *b);
+// extern void sec_xori_test_asm(uint32_t *r, uint32_t *a);
 // extern void sec_slli_test_asm(uint32_t *r, uint32_t *a);
 // extern void sec_srli_test_asm(uint32_t *r, uint32_t *a);
 
 // class-2 
-// extern void sec_sw_test_asm(uint32_t *r);
 // extern void sec_lw_test_asm(uint32_t *r);
+// extern void sec_sw_test_asm(uint32_t *r);
 
 // class-3
 // extern void sec_zlo_test_asm(uint32_t *r);
@@ -21,15 +24,27 @@
 // class-1
 
 .macro sec.and  rd, rs1, rs2 
-.insn r CUSTOM_0, 3, 0, \rd, \rs1, \rs2
+.insn r CUSTOM_0, 0, 0, \rd, \rs1, \rs2
+.endm
+
+.macro sec.andi rd, rs1, imm 
+.insn i CUSTOM_0, 1, \rd, \rs1, \imm
 .endm
 
 .macro sec.or   rd, rs1, rs2 
-.insn r CUSTOM_0, 4, 0, \rd, \rs1, \rs2
+.insn r CUSTOM_0, 2, 0, \rd, \rs1, \rs2
+.endm
+
+.macro sec.ori  rd, rs1, imm 
+.insn i CUSTOM_0, 3, \rd, \rs1, \imm
 .endm
 
 .macro sec.xor  rd, rs1, rs2 
-.insn r CUSTOM_0, 5, 0, \rd, \rs1, \rs2
+.insn r CUSTOM_0, 4, 0, \rd, \rs1, \rs2
+.endm
+
+.macro sec.xori rd, rs1, imm 
+.insn i CUSTOM_0, 5, \rd, \rs1, \imm
 .endm
 
 .macro sec.slli rd, rs1, imm 
@@ -42,22 +57,22 @@
 
 // class-2
 
-.macro sec.sw   rs2, rs1, imm
-.insn s CUSTOM_0, 1, \rs2, \imm(\rs1)
-.endm 
-
 .macro sec.lw   rd, rs1, imm
-.insn i CUSTOM_0, 0, \rd, \imm(\rs1)
+.insn i CUSTOM_1, 0, \rd, \imm(\rs1)
+.endm  
+
+.macro sec.sw   rs2, rs1, imm
+.insn s CUSTOM_1, 1, \rs2, \imm(\rs1)
 .endm 
 
 // class-3 
 
 .macro sec.zlo  imm
-.insn u CUSTOM_1, x0, \imm
+.insn u CUSTOM_2, x0, \imm
 .endm
 
 .macro sec.zhi  imm 
-.insn u CUSTOM_2, x0, \imm
+.insn u CUSTOM_3, x0, \imm
 .endm
 
 
@@ -79,6 +94,17 @@ sec_and_test_asm:
   sw       t0, 0(a0)
   ret 
 
+.global sec_andi_test_asm 
+
+sec_andi_test_asm:
+  lw       t5, 0(a1)
+  li       t1, 0xDDDDDDDD   // facilitate the check in gtkwave
+  li       t0, 0x55555555   // facilitate the check in gtkwave
+  sec.andi t0, t5, 0x0FF
+  sec.andi t1, t5, 0x0FF
+  sw       t0, 0(a0)
+  ret 
+
 .global sec_or_test_asm 
 
 sec_or_test_asm:
@@ -91,6 +117,17 @@ sec_or_test_asm:
   sw       t0, 0(a0)
   ret 
 
+.global sec_ori_test_asm 
+
+sec_ori_test_asm:
+  lw       t5, 0(a1)
+  li       t1, 0xDDDDDDDD   // facilitate the check in gtkwave
+  li       t0, 0x55555555   // facilitate the check in gtkwave
+  sec.ori  t0, t5, 0x0FF
+  sec.ori  t1, t5, 0x0FF
+  sw       t0, 0(a0)
+  ret 
+
 .global sec_xor_test_asm 
 
 sec_xor_test_asm:
@@ -100,6 +137,17 @@ sec_xor_test_asm:
   li       t0, 0x55555555   // facilitate the check in gtkwave
   sec.xor  t0, t5, t6
   sec.xor  t1, t5, t6
+  sw       t0, 0(a0)
+  ret
+
+.global sec_xori_test_asm 
+
+sec_xori_test_asm:
+  lw       t5, 0(a1)
+  li       t1, 0xDDDDDDDD   // facilitate the check in gtkwave
+  li       t0, 0x55555555   // facilitate the check in gtkwave
+  sec.xori t0, t5, -1
+  sec.xori t1, t5, -1
   sw       t0, 0(a0)
   ret
 

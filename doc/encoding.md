@@ -54,12 +54,12 @@
 ```
 # load a word from RAM
 .macro sec.lw   rd, rs1, imm
-.insn i CUSTOM_0, 0, \rd, \imm(\rs1)
+.insn i CUSTOM_1, 0, \rd, \imm(\rs1)
 .endm 
 
 # store a word to RAM
 .macro sec.sw   rs2, rs1, imm
-.insn s CUSTOM_0, 1, \rs2, \imm(\rs1)
+.insn s CUSTOM_1, 1, \rs2, \imm(\rs1)
 .endm 
 ```
 
@@ -68,12 +68,12 @@
 ```
 # erase the low registers x0-x15
 .macro sec.zlo  imm
-.insn u CUSTOM_1, x0, \imm
+.insn u CUSTOM_2, x0, \imm
 .endm
 
 # erase the high registers x16-x31
 .macro sec.zhi  imm 
-.insn u CUSTOM_2, x0, \imm
+.insn u CUSTOM_3, x0, \imm
 .endm
 ```
 
@@ -127,12 +127,12 @@
 
 # load a word from RAM (md selects the used lsmseed CSR)
 .macro sec.lw  rd, rs1, imm, md 
-.insn i CUSTOM_0, 0, \rd,  \imm+1024*LB(\md)-2048*HB(\md)(\rs1)
+.insn i CUSTOM_1, 0, \rd,  \imm+1024*LB(\md)-2048*HB(\md)(\rs1)
 .endm
 
 # store a word to RAM (md selects the used lsmseed CSR)
 .macro sec.sw  rs2, rs1, imm, md
-.insn s CUSTOM_0, 1, \rs2, \imm+1024*LB(\md)-2048*HB(\md)(\rs1)
+.insn s CUSTOM_1, 1, \rs2, \imm+1024*LB(\md)-2048*HB(\md)(\rs1)
 .endm 
 ```
 
@@ -147,7 +147,7 @@ Volume II: Privileged Architecture](https://github.com/riscv/riscv-isa-manual/re
 ```
 
 - In order to use the class-2 instructions properly, 
-the implementer has to intiliase the `lsmseed` CSRs in the prologue of the assembler code, 
+the masked implementation developer has to intiliase the `lsmseed` CSRs in the prologue of the assembler code, 
 e.g., 
 ```
 # t0-t3 hold four different random nonces
@@ -161,12 +161,12 @@ csrrw    x0, lsmseed3, t3
 ```
 # erase the low registers x0-x15
 .macro sec.zlo  imm
-.insn u CUSTOM_1, x0, \imm
+.insn u CUSTOM_2, x0, \imm
 .endm
 
 # erase the high registers x16-x31
 .macro sec.zhi  imm 
-.insn u CUSTOM_2, x0, \imm
+.insn u CUSTOM_3, x0, \imm
 .endm
 ```
 

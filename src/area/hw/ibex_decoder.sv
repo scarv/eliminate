@@ -264,53 +264,73 @@ module ibex_decoder #(
 
       // ++ eliminate 
 
-      /////////
-      // SEC //
-      /////////
+      ////////////////////////////
+      // SECURE BITWISE-LOGICAL //
+      ////////////////////////////
 
-      OPCODE_SEC: begin // custom secure instructions 
-        rf_ren_a_o          = 1'b1;     
+      OPCODE_SEC_BWLG: begin // custom secure bitwise-logical instructions 
+        rf_ren_a_o            = 1'b1;
+        sec_bwlogic_o         = 1'b1;
+        rf_we                 = 1'b1;
+
+        unique case (instr[14:12]) 
+          3'b000, 
+          3'b010,
+          3'b100:  begin // register-register sec.and/or/xor instructions
+            rf_ren_b_o   = 1'b1;
+            unique case (instr[31:25]) 
+              7'b000_0000: illegal_insn = 1'b0;
+              default:     illegal_insn = 1'b1;
+            endcase 
+          end
+          3'b001, 
+          3'b011,
+          3'b101: begin // register-immediate sec.and/or/xor instructions
+            rf_ren_b_o   = 1'b0;
+            illegal_insn = 1'b0;
+          end
+          3'b110,
+          3'b111: begin // register-immediate secure shift instructions
+            rf_ren_b_o   = 1'b0;
+            unique case (instr[31:25]) 
+              7'b000_0000: illegal_insn = 1'b0;
+              default:     illegal_insn = 1'b1;
+            endcase 
+          end
+          default: illegal_insn = 1'b1;
+        endcase
+      end 
+
+      ///////////////////////////
+      // SECURE LOAD AND STORE //
+      ///////////////////////////      
+
+      OPCODE_SEC_LDST: begin // custom secure load and store instructions
+        rf_ren_a_o            = 1'b1;   
 
         if (instr[14:12] == 3'b000) begin // secure load 
           sec_load_o          = 1'b1;
-          if (sec_insn_first_two_cycles_i) begin
-             // first two cycles are essentially used by a normal store 
-            data_req_o        = 1'b1;
-            data_we_o         = 1'b1;   // store 
-            data_type_o       = 2'b00;
-            illegal_insn      = 1'b0;
-          end else begin 
-            // then next four cycles are essentially used by two normal loads
-            data_req_o        = 1'b1;
-            data_we_o         = 1'b0;   // load
-            data_type_o       = 2'b00;
-            illegal_insn      = 1'b0;            
-          end
+          illegal_insn        = 1'b0;
+          data_req_o          = 1'b1;
+          data_type_o         = 2'b00;  // word size
+          // first two cycles are essentially used by a normal store;
+          // then next four cycles are essentially used by two normal loads 
+          data_we_o           = sec_insn_first_two_cycles_i;
         end else if (instr[14:12] == 3'b001) begin // secure store
-          sec_store_o       = 1'b1;
-          rf_ren_b_o        = 1'b1;
-          data_req_o        = 1'b1;
-          data_we_o         = 1'b1;
-          data_type_o       = 2'b00;
-          illegal_insn      = 1'b0;
-        end else begin // secure bitwise-logical operations 
-          sec_bwlogic_o     = 1'b1; 
-          rf_we             = 1'b1;
-          rf_ren_b_o        = 1'b1;
-          unique case ({instr[31:25], instr[14:12]})
-            {7'b000_0000, 3'b011},
-            {7'b000_0000, 3'b100},
-            {7'b000_0000, 3'b101}, 
-            {7'b000_0000, 3'b110},
-            {7'b000_0000, 3'b111}: illegal_insn = 1'b0;
-            default:               illegal_insn = 1'b1;
-        endcase 
+          sec_store_o         = 1'b1;
+          rf_ren_b_o          = 1'b1;
+          data_req_o          = 1'b1;
+          data_we_o           = 1'b1;   // store 
+          data_type_o         = 2'b00;  // word size
+          illegal_insn        = 1'b0;
+        end else begin 
+          illegal_insn        = 1'b1;
         end
       end
 
-      /////////////
-      // SEC ERS //
-      /////////////
+      /////////////////////
+      // SECURE ERSASURE //
+      /////////////////////
 
       OPCODE_SEC_ERSL: begin // custom secure erasure instructions (low)
         rf_sec_ers_o = {16'b0, instr[27:12]};
@@ -787,47 +807,64 @@ module ibex_decoder #(
 
       // ++ eliminate
 
-      /////////
-      // SEC //
-      /////////
+      ////////////////////////////
+      // SECURE BITWISE-LOGICAL //
+      ////////////////////////////
 
-      OPCODE_SEC: begin  // custom secure instructions
+      OPCODE_SEC_BWLG: begin // custom secure bitwise-logical instructions 
         alu_op_a_mux_sel_o  = OP_A_REG_A;
 
         unique case (instr[14:12])
-          3'b000: alu_operator_o = ALU_ADD;
-          3'b001: alu_operator_o = ALU_ADD;
-          3'b011: alu_operator_o = ALU_AND;
-          3'b100: alu_operator_o = ALU_OR;
-          3'b101: alu_operator_o = ALU_XOR;
-          3'b110: alu_operator_o = ALU_SLL;
-          3'b111: alu_operator_o = ALU_SRL;
+          3'b000: alu_operator_o = ALU_AND; // sec.and
+          3'b001: alu_operator_o = ALU_AND; // sec.andi
+          3'b010: alu_operator_o = ALU_OR;  // sec.or
+          3'b011: alu_operator_o = ALU_OR;  // sec.ori
+          3'b100: alu_operator_o = ALU_XOR; // sec.xor
+          3'b101: alu_operator_o = ALU_XOR; // sec.xori
+          3'b110: alu_operator_o = ALU_SLL; // sec.slli
+          3'b111: alu_operator_o = ALU_SRL; // sec.srli
           default: ;
         endcase 
 
-        unique case (instr[14:12]) 
-          3'b000: begin // secure load
-            if (sec_insn_first_four_cycles_i) begin 
-              // store 0 to the stack first, then load it again from the stack 
-              // to flush the load/store buffer
-              alu_op_b_mux_sel_o         = OP_B_IMM;
-              imm_b_mux_sel_o            = IMM_B_ZERO;  // imm = 0, i.e., fixed to use 0(sp)
-            end else begin 
-              // load the data needed from RAM
-              alu_op_b_mux_sel_o         = OP_B_IMM;
-              imm_b_mux_sel_o            = IMM_B_I;
-            end
-          end
-          3'b001: begin // secure store 
-            alu_op_b_mux_sel_o         = OP_B_IMM;
-            imm_b_mux_sel_o            = IMM_B_S;
-          end
+        unique case (instr[14:12])
+          3'b001,
+          3'b011,
+          3'b101, 
           3'b110,
-          3'b111: begin // secure shift
+          3'b111: begin // register-immediate instructions
             alu_op_b_mux_sel_o         = OP_B_IMM;
             imm_b_mux_sel_o            = IMM_B_I;
           end
           default: alu_op_b_mux_sel_o  = OP_B_REG_B;
+        endcase
+      end
+
+      ///////////////////////////
+      // SECURE LOAD AND STORE //
+      /////////////////////////// 
+
+      OPCODE_SEC_LDST: begin // custom secure load and store instructions
+        alu_op_a_mux_sel_o  = OP_A_REG_A;
+        alu_operator_o      = ALU_ADD;
+
+          unique case (instr[14:12]) 
+            3'b000: begin // secure load
+              if (sec_insn_first_four_cycles_i) begin 
+                // store 0 to the stack first, then load it again from the stack 
+                // to flush the load/store buffer
+                alu_op_b_mux_sel_o         = OP_B_IMM;
+                imm_b_mux_sel_o            = IMM_B_ZERO;  // imm = 0, i.e., fixed to use 0(sp)
+              end else begin 
+                // load the data needed from RAM
+                alu_op_b_mux_sel_o         = OP_B_IMM;
+                imm_b_mux_sel_o            = IMM_B_I;
+              end
+            end
+            3'b001: begin // secure store 
+              alu_op_b_mux_sel_o         = OP_B_IMM;
+              imm_b_mux_sel_o            = IMM_B_S;
+            end
+          default:;
         endcase
       end
 
