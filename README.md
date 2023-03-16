@@ -1,6 +1,6 @@
 # eLIMInate: a Leakage-aware ISE for Masked Implementation
 
-[Ibex core](https://github.com/lowRISC/ibex) is served as the base core for this work.
+[Ibex core](https://github.com/lowRISC/ibex) is served as the host core for this work.
 
 <!--- ==================================================================== --->
 
@@ -33,11 +33,11 @@ The performance evaluation of ISE is done with using [Ibex Demo System](https://
 
     - Copy all the files in `src/[area/lantecy]/hw/` and replace the original files in `extern/ibex-demo-system/vendor/lowrisc_ibex/rtl/`.
 
-    - Copy the software micro-benchmark folder `src/[area/lantecy]/sw`, and paste it to `extern/ibex-demo-system/sw/demo/` and rename it to, e.g., `sec_insn`.
+    - Copy the software micro-benchmark folder `src/[area/lantecy]/sw`, and paste it to `extern/ibex-demo-system/sw/demo/` and rename it to, e.g., `eliminate`.
 
     - Enter `extern/ibex-demo-system/`.
 
-    - Edit the file `sw/demo/CMakeLists.txt` to add `add_subdirectory(sec_insn)`.
+    - Edit the file `sw/demo/CMakeLists.txt` to add `add_subdirectory(eliminate)`.
 
     - Edit the file `sw/CMakeLists.txt` to enable the support for assembler code (which is used in micro-benchmarks), i.e., adding `enable_language(ASM)` and `set(CMAKE_ASM_COMPILER riscv32-unknown-elf-gcc)`.
 
@@ -68,7 +68,7 @@ The performance evaluation of ISE is done with using [Ibex Demo System](https://
 
   b) simulation-option: view the signals in `gtkwave` (e.g., with the help of `clk_i`).
 
-- Hardware measurement
+- Hardware overhead measurement
 
   a) FPGA-option (only): check the vivado ultilisation report.
 
