@@ -7,7 +7,7 @@
 ## Organisation
 ```
 ├── doc                     - documentation
-├── extern                  - extern submodules
+├── extern                  - external submodules
 └── src                     - source code
     ├── area                  - source code for area-optimised version 
     │   ├── coco                - source code for security evaluation with coco     
@@ -66,7 +66,7 @@ The performance evaluation of ISE is done with using [Ibex Demo System](https://
 
   a) FPGA-option: use `rdcycle` instruction. 
 
-  b) simulation-option: view the signals in gtkwave (e.g., with the help of `clk_i`).
+  b) simulation-option: view the signals in `gtkwave` (e.g., with the help of `clk_i`).
 
 - Hardware measurement
 

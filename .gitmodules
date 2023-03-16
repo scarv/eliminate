@@ -1,0 +1,9 @@
+[submodule "extern/ibex-demo-system"]
+	path = extern/ibex-demo-system
+	url = https://github.com/lowRISC/ibex-demo-system
+[submodule "extern/coco-alma"]
+	path = extern/coco-alma
+	url = https://github.com/IAIK/coco-alma
+[submodule "extern/coco-ibex"]
+	path = extern/coco-ibex
+	url = https://github.com/IAIK/coco-ibex
