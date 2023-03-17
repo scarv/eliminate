@@ -34,9 +34,9 @@ The performance evaluation of ISE is done with using [Ibex Demo System](https://
 
   - Manual modification
 
-    - Copy all the files in `src/[area/lantecy]/hw/` and replace the original files in `extern/ibex-demo-system/vendor/lowrisc_ibex/rtl/`.
+    - Copy all the files in `src/[area/latency]/hw/` and replace the original files in `extern/ibex-demo-system/vendor/lowrisc_ibex/rtl/`.
 
-    - Copy the software micro-benchmark folder `src/[area/lantecy]/sw`, and paste it to `extern/ibex-demo-system/sw/demo/` and rename it to `eliminate`.
+    - Copy the software micro-benchmark folder `src/[area/latency]/sw`, and paste it to `extern/ibex-demo-system/sw/demo/` and rename it to `eliminate`.
 
     - Enter `extern/ibex-demo-system/`.
 
@@ -61,9 +61,9 @@ The performance evaluation of ISE is done with using [Ibex Demo System](https://
 
 - Computational correctness test
 
-  a) FPGA-option (recomanded for latency-optmised version): view the output of loaded application via `screen`.
+  a) FPGA-option (recommended for latency-optmised version): view the output of loaded application via `screen`.
 
-  b) simulation-option (recommanded for area-optimised version): view the signals of the collected FST trace in `gtkwave`. 
+  b) simulation-option (recommended for area-optimised version): view the signals of the collected FST trace in `gtkwave`. 
 
 - Latency measurement
 
