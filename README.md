@@ -75,7 +75,7 @@ The performance evaluation of ISE is done with using [Ibex Demo System](https://
 
   a) FPGA-option (only): check the vivado ultilisation report.
 
-### Security evaluation 
+### Non-leakage evaluation 
 
 The security evaluation of ISE is done by using [coco](https://github.com/IAIK/coco-alma) tool 
 (i.e., `extern/coco-alma` and `extern/coco-ibex`).
@@ -87,32 +87,32 @@ The security evaluation of ISE is done by using [coco](https://github.com/IAIK/c
 
 ### Area-optimised version 
 
-| Instructions | Computation | Security | Latency | 
-| :----------: | :---------: | :------: | :-----: |
-| `sec.and`    |     &check; |  &check; |       2 |
-| `sec.andi`   |     &check; |          |       2 |
-| `sec.or`     |     &check; |  &check; |       2 |
-| `sec.ori`    |     &check; |          |       2 |
-| `sec.xor`    |     &check; |  &check; |       2 |
-| `sec.xori`   |     &check; |          |       2 |
-| `sec.lw`     |     &check; |          |       6 |
-| `sec.sw`     |     &check; |          |       4 |
-| `sec.zlo`    |     &check; |          |       1 |
-| `sec.zhi`    |     &check; |          |       1 |
+| Instructions | Computation | Non-leakage | Latency | 
+| :----------: | :---------: | :---------: | :-----: |
+| `sec.and`    |     &check; |     &check; |       2 |
+| `sec.andi`   |     &check; |             |       2 |
+| `sec.or`     |     &check; |     &check; |       2 |
+| `sec.ori`    |     &check; |             |       2 |
+| `sec.xor`    |     &check; |     &check; |       2 |
+| `sec.xori`   |     &check; |             |       2 |
+| `sec.lw`     |     &check; |             |       6 |
+| `sec.sw`     |     &check; |             |       4 |
+| `sec.zlo`    |     &check; |             |       1 |
+| `sec.zhi`    |     &check; |             |       1 |
 
 ### Latency-optimised version 
 
-| Instructions | Computation | Security | Latency | 
-| :----------: | :---------: | :------: | :-----: |
-| `sec.and`    |     &check; |          |       1 |
-| `sec.andi`   |     &check; |          |       1 |
-| `sec.or`     |     &check; |          |       1 |
-| `sec.ori`    |     &check; |          |       1 |
-| `sec.xor`    |     &check; |          |       1 |
-| `sec.xori`   |     &check; |          |       1 |
-| `sec.lw`     |     &check; |          |       2 |
-| `sec.sw`     |     &check; |          |       2 |
-| `sec.zlo`    |     &check; |          |       1 |
-| `sec.zhi`    |     &check; |          |       1 |
+| Instructions | Computation | Non-leakage | Latency | 
+| :----------: | :---------: | :---------: | :-----: |
+| `sec.and`    |     &check; |             |       1 |
+| `sec.andi`   |     &check; |             |       1 |
+| `sec.or`     |     &check; |             |       1 |
+| `sec.ori`    |     &check; |             |       1 |
+| `sec.xor`    |     &check; |             |       1 |
+| `sec.xori`   |     &check; |             |       1 |
+| `sec.lw`     |     &check; |             |       2 |
+| `sec.sw`     |     &check; |             |       2 |
+| `sec.zlo`    |     &check; |             |       1 |
+| `sec.zhi`    |     &check; |             |       1 |
 
 <!--- ==================================================================== --->
