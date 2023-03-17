@@ -45,7 +45,7 @@ The performance evaluation of ISE is done with using [Ibex Demo System](https://
 
   - Using the patch
 
-    - TBA
+    - **TBA**
 
 - Enter `extern/ibex-demo-system/` and follow the instructions of `README.md` to 
   - install all the required tools and packages;
@@ -76,4 +76,40 @@ The performance evaluation of ISE is done with using [Ibex Demo System](https://
 
 The security evaluation of ISE is done by using [coco](https://github.com/IAIK/coco-alma) tool 
 (i.e., `extern/coco-alma` and `extern/coco-ibex`).
+**TBA**.
 
+<!--- ==================================================================== --->
+
+## Working status re. instruction evaluation
+
+### Area-optimised version 
+
+| Instructions | Computation | Security | Latency | 
+| :----------: | :---------: | :------: | :-----: |
+| `sec.and`    |     &check; |  &check; |       2 |
+| `sec.andi`   |     &check; |  &check; |       2 |
+| `sec.or`     |     &check; |  &check; |       2 |
+| `sec.ori`    |     &check; |  &check; |       2 |
+| `sec.xor`    |     &check; |  &check; |       2 |
+| `sec.xori`   |     &check; |  &check; |       2 |
+| `sec.lw`     |     &check; |          |       6 |
+| `sec.sw`     |     &check; |          |       4 |
+| `sec.zlo`    |     &check; |          |       1 |
+| `sec.zhi`    |     &check; |          |       1 |
+
+### Latency-optimised version 
+
+| Instructions | Computation | Security | Latency | 
+| :----------: | :---------: | :------: | :-----: |
+| `sec.and`    |     &check; |          |       1 |
+| `sec.andi`   |             |          |       1 |
+| `sec.or`     |     &check; |          |       1 |
+| `sec.ori`    |             |          |       1 |
+| `sec.xor`    |     &check; |          |       1 |
+| `sec.xori`   |             |          |       1 |
+| `sec.lw`     |     &check; |          |       1 |
+| `sec.sw`     |     &check; |          |       1 |
+| `sec.zlo`    |     &check; |          |       1 |
+| `sec.zhi`    |     &check; |          |       1 |
+
+<!--- ==================================================================== --->

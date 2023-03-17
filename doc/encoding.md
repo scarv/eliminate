@@ -71,7 +71,7 @@ e.g.,
 ```
 # in the prologue of masked assembler implementation 
 addi sp, sp, -4
-# in the epilogue of masker assembler implementation 
+# in the epilogue of masked assembler implementation 
 addi sp, sp,  4 
 ``` 
 
