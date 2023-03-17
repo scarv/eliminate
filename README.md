@@ -1,6 +1,9 @@
 # eLIMInate: a Leakage-aware ISE for Masked Implementation
 
 [Ibex core](https://github.com/lowRISC/ibex) is served as the host core for this work.
+All the modifications to the original Ibex core (RTL files) are well-marked with
+`// ++ eliminate` and `// -- eliminate`, which facilitates 
+the check by users. 
 
 <!--- ==================================================================== --->
 
@@ -49,7 +52,7 @@ The performance evaluation of ISE is done with using [Ibex Demo System](https://
 
 - Enter `extern/ibex-demo-system/` and follow the instructions of `README.md` to 
   - install all the required tools and packages;
-  - build the software (i.e., our micro-benchmarks);
+  - build the software (i.e., the micro-benchmarks);
   -  a) FPGA-option: build FPGA bitstream + program FPGA + load application; 
 
      or
@@ -60,7 +63,7 @@ The performance evaluation of ISE is done with using [Ibex Demo System](https://
 
   a) FPGA-option: view the output of loaded application via `screen`.
 
-  b) simulation-option: view the signals of the collected FST trace in `gtkwave`. 
+  b) simulation-option (recommanded): view the signals of the collected FST trace in `gtkwave`. 
 
 - Latency measurement
 
@@ -87,11 +90,11 @@ The security evaluation of ISE is done by using [coco](https://github.com/IAIK/c
 | Instructions | Computation | Security | Latency | 
 | :----------: | :---------: | :------: | :-----: |
 | `sec.and`    |     &check; |  &check; |       2 |
-| `sec.andi`   |     &check; |  &check; |       2 |
+| `sec.andi`   |     &check; |          |       2 |
 | `sec.or`     |     &check; |  &check; |       2 |
-| `sec.ori`    |     &check; |  &check; |       2 |
+| `sec.ori`    |     &check; |          |       2 |
 | `sec.xor`    |     &check; |  &check; |       2 |
-| `sec.xori`   |     &check; |  &check; |       2 |
+| `sec.xori`   |     &check; |          |       2 |
 | `sec.lw`     |     &check; |          |       6 |
 | `sec.sw`     |     &check; |          |       4 |
 | `sec.zlo`    |     &check; |          |       1 |
