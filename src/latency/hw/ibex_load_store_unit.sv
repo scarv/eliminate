@@ -19,9 +19,9 @@ module ibex_load_store_unit #(
   parameter int unsigned MemDataWidth = MemECC ? 32 + 7 : 32
 ) (
   // ++ eliminate 
-  input  logic         sec_store_i,
-  input  logic         sec_load_i,
-  // -- eliminate 
+  input  logic         sec_ldst_i,
+  input  logic [31:0]  lsu_lsmseed_i,
+  // -- eliminate
 
   input  logic         clk_i,
   input  logic         rst_ni,
@@ -75,10 +75,6 @@ module ibex_load_store_unit #(
   output logic         perf_store_o
 );
 
-  // ++ eliminate 
-  logic         data_write_zero;  // whether to write a zero or not
-  // -- eliminate
-
   logic [31:0]  data_addr;
   logic [31:0]  data_addr_w_aligned;
   logic [31:0]  addr_last_q, addr_last_d;
@@ -110,14 +106,9 @@ module ibex_load_store_unit #(
   logic         lsu_err_q, lsu_err_d;
   logic         data_intg_err, data_or_pmp_err;
 
-  typedef enum logic [3:0]  {
+  typedef enum logic [2:0]  {
     IDLE, WAIT_GNT_MIS, WAIT_RVALID_MIS, WAIT_GNT,
-    // ++ eliminate 
-    // WAIT_RVALID_MIS_GNTS_DONE
-    WAIT_RVALID_MIS_GNTS_DONE, 
-    // extra FSM states for custom secure load and store
-    WAIT_SEC_1, WAIT_SEC_2, WAIT_SEC_3, WAIT_SEC_4
-    // -- eliminate
+    WAIT_RVALID_MIS_GNTS_DONE
   } ls_fsm_e;
 
   ls_fsm_e ls_fsm_cs, ls_fsm_ns;
@@ -377,10 +368,7 @@ module ibex_load_store_unit #(
       ((lsu_type_i == 2'b00) && (data_offset != 2'b00)) || // misaligned word access
       ((lsu_type_i == 2'b01) && (data_offset == 2'b11));   // misaligned half-word access
 
-  // ++ eliminate 
-  ls_fsm_e ls_fsm_ns_misaligned;
-  // -- eliminate
-
+  // FSM
   always_comb begin
     ls_fsm_ns       = ls_fsm_cs;
 
@@ -397,42 +385,7 @@ module ibex_load_store_unit #(
     perf_load_o         = 1'b0;
     perf_store_o        = 1'b0;
 
-    // ++ eliminate 
-    data_write_zero     = 1'b0;
-    // -- eliminate
-
     unique case (ls_fsm_cs)
-
-    // ++ eliminate
-    
-      WAIT_SEC_1: begin 
-        data_write_zero = 1'b1;
-        data_req_o   = 1'b1;
-        lsu_err_d    = 1'b0;
-        ls_fsm_ns    = WAIT_SEC_2;
-      end
-
-      WAIT_SEC_2: begin 
-        data_req_o   = 1'b1;
-        lsu_err_d    = 1'b0;
-        ctrl_update  = sec_load_i;                        // if secure load, then store -> load
-        ls_fsm_ns    = (sec_load_i) ? WAIT_SEC_3 : IDLE;  // if secure load, then need 2 more cycles        
-      end
-
-      WAIT_SEC_3: begin 
-        data_req_o   = 1'b1;
-        lsu_err_d    = 1'b0; 
-        ls_fsm_ns    = WAIT_SEC_4;
-      end
-
-      WAIT_SEC_4: begin 
-        data_req_o   = 1'b1;
-        lsu_err_d    = 1'b0; 
-        ctrl_update  = 1'b1;    // load -> load
-        ls_fsm_ns    = IDLE;
-      end
-
-      // -- eliminate
 
       IDLE: begin
         pmp_err_d = 1'b0;
@@ -440,25 +393,14 @@ module ibex_load_store_unit #(
           data_req_o   = 1'b1;
           pmp_err_d    = data_pmp_err_i;
           lsu_err_d    = 1'b0;
-          // ++ eliminate
-          // perf_load_o  = ~lsu_we_i;
-          // perf_store_o = lsu_we_i;
-          // the fisrt "sub-instruction" in the secure load is a store, thus 
-          // here needs to accordingly modified
-          perf_load_o  = (sec_load_i) ? 1'b1 : ~lsu_we_i;
-          perf_store_o = (sec_load_i) ? 1'b0 : lsu_we_i;
-          // -- eliminate
+          perf_load_o  = ~lsu_we_i;
+          perf_store_o = lsu_we_i;
 
           if (data_gnt_i) begin
             ctrl_update         = 1'b1;
             addr_update         = 1'b1;
             handle_misaligned_d = split_misaligned_access;
-            // ++ eliminate
-            // ls_fsm_ns           = split_misaligned_access ? WAIT_RVALID_MIS : IDLE;
-            ls_fsm_ns_misaligned = split_misaligned_access ? WAIT_RVALID_MIS : IDLE;
-            ls_fsm_ns            = (sec_store_i | sec_load_i) ? WAIT_SEC_1 : ls_fsm_ns_misaligned;
-            data_write_zero      = sec_store_i | sec_load_i;
-            // -- eliminate
+            ls_fsm_ns           = split_misaligned_access ? WAIT_RVALID_MIS : IDLE;
           end else begin
             ls_fsm_ns           = split_misaligned_access ? WAIT_GNT_MIS    : WAIT_GNT;
           end
@@ -573,8 +515,24 @@ module ibex_load_store_unit #(
   assign lsu_rdata_valid_o  =
     (ls_fsm_cs == IDLE) & data_rvalid_i & ~data_or_pmp_err & ~data_we_q & ~data_intg_err;
 
+  // ++ eliminate 
+  logic [31:0] data_rdata_masked;
+  logic [31:0] data_wdata_masked;
+  logic [31:0] data_lsm;
+
+  ibex_lsm_generator ibex_lsm_generator_i (
+    .data_addr_i(data_addr_o),
+    .lsmseed_i(lsu_lsmseed_i),
+    .data_lsm_o(data_lsm)
+  );
+
+  assign data_rdata_masked = data_rdata_ext ^ data_lsm;
+
   // output to register file
-  assign lsu_rdata_o = data_rdata_ext;
+  // assign lsu_rdata_o = data_rdata_ext;
+  assign lsu_rdata_o = (sec_ldst_i) ? data_rdata_masked : data_rdata_ext;
+
+  // -- eliminate
 
   // output data address must be word aligned
   assign data_addr_w_aligned = {data_addr[31:2], 2'b00};
@@ -597,8 +555,9 @@ module ibex_load_store_unit #(
   end else begin : g_no_mem_wdata_ecc
     // ++ eliminate 
     // assign data_wdata_o = data_wdata;
-    assign data_wdata_o = (data_write_zero) ? '0 : data_wdata;
-    // -- eliminate
+    assign data_wdata_masked = data_wdata ^ data_lsm;
+    assign data_wdata_o = (sec_ldst_i) ? data_wdata_masked : data_wdata;
+    // -- elimiate
   end
 
   // output to ID stage: mtval + AGU for misaligned transactions

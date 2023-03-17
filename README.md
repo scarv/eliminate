@@ -105,11 +105,11 @@ The security evaluation of ISE is done by using [coco](https://github.com/IAIK/c
 | Instructions | Computation | Security | Latency | 
 | :----------: | :---------: | :------: | :-----: |
 | `sec.and`    |     &check; |          |       1 |
-| `sec.andi`   |             |          |       1 |
+| `sec.andi`   |     &check; |          |       1 |
 | `sec.or`     |     &check; |          |       1 |
-| `sec.ori`    |             |          |       1 |
+| `sec.ori`    |     &check; |          |       1 |
 | `sec.xor`    |     &check; |          |       1 |
-| `sec.xori`   |             |          |       1 |
+| `sec.xori`   |     &check; |          |       1 |
 | `sec.lw`     |     &check; |          |       1 |
 | `sec.sw`     |     &check; |          |       1 |
 | `sec.zlo`    |     &check; |          |       1 |
