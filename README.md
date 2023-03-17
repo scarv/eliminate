@@ -33,7 +33,7 @@ The performance evaluation of ISE is done with using [Ibex Demo System](https://
 
     - Copy all the files in `src/[area/lantecy]/hw/` and replace the original files in `extern/ibex-demo-system/vendor/lowrisc_ibex/rtl/`.
 
-    - Copy the software micro-benchmark folder `src/[area/lantecy]/sw`, and paste it to `extern/ibex-demo-system/sw/demo/` and rename it to, e.g., `eliminate`.
+    - Copy the software micro-benchmark folder `src/[area/lantecy]/sw`, and paste it to `extern/ibex-demo-system/sw/demo/` and rename it to `eliminate`.
 
     - Enter `extern/ibex-demo-system/`.
 

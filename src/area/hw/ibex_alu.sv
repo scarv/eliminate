@@ -11,8 +11,8 @@ module ibex_alu #(
 ) (
   // ++ eliminate 
   // A secure shift instruction takes two clock cycles, and in the second clock
-  // cycle the shift_amt should still be `operand_b_i` not `shift_amt_compl`.
-  // Hence, it would need this `sec_bwlogic_i` to select the correct wire.
+  // cycle the `shift_amt` should still be `operand_b_i` not `shift_amt_compl`.
+  // Hence, it needs this `sec_bwlogic_i` to select the correct wire.
   input  logic              sec_bwlogic_i,
   // -- eliminate 
   

@@ -189,6 +189,8 @@ sec_sw_test_asm:
 
 .global sec_lw_test_asm
 sec_lw_test_asm:
+  // the secure load needs to push and pop 0 to the lowest address of stack
+  addi     sp, sp, -4
   li       t0, 0x123
   sec.lw   t0, a0, 0
   sw       t0, 0(a0)
@@ -201,6 +203,7 @@ sec_lw_test_asm:
   li       t0, 0x123
   sec.lw   t0, a0,12
   sw       t0, 12(a0)
+  addi     sp, sp, 4
   ret
 
 // class-3

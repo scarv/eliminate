@@ -204,8 +204,8 @@ module ibex_id_stage #(
   logic        stall_sec_bwlogic;           // stall because of the custom secure bitwise-logical instruction
   logic        sec_load;                    // whether it's a custom secure load instruction
   logic        sec_store;                   // whether it's a custom secure store instruction
-  logic        sec_insn_first_two_cycles;   // whether it's the first two cycles of custom secure instruction
-  logic        sec_insn_first_four_cycles;  // whether it's the first four cycles of custom secure instruction
+  logic        sec_insn_first_two_cycles;   // whether it's now in the first two cycles of custom secure instruction
+  logic        sec_insn_first_four_cycles;  // whether it's now in the first four cycles of custom secure instruction
   // -- eliminate
 
   // Decoder/Controller, ID stage internal signals
