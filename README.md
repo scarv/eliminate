@@ -61,13 +61,13 @@ The performance evaluation of ISE is done with using [Ibex Demo System](https://
 
 - Computational correctness test
 
-  a) FPGA-option: view the output of loaded application via `screen`.
+  a) FPGA-option (recomanded for latency-optmised version): view the output of loaded application via `screen`.
 
-  b) simulation-option (recommanded): view the signals of the collected FST trace in `gtkwave`. 
+  b) simulation-option (recommanded for area-optimised version): view the signals of the collected FST trace in `gtkwave`. 
 
 - Latency measurement
 
-  a) FPGA-option: use `rdcycle` instruction. 
+  a) FPGA-option: view the output of loaded application via `screen`.
 
   b) simulation-option: view the signals in `gtkwave` (e.g., with the help of `clk_i`).
 
@@ -110,8 +110,8 @@ The security evaluation of ISE is done by using [coco](https://github.com/IAIK/c
 | `sec.ori`    |     &check; |          |       1 |
 | `sec.xor`    |     &check; |          |       1 |
 | `sec.xori`   |     &check; |          |       1 |
-| `sec.lw`     |     &check; |          |       1 |
-| `sec.sw`     |     &check; |          |       1 |
+| `sec.lw`     |     &check; |          |       2 |
+| `sec.sw`     |     &check; |          |       2 |
 | `sec.zlo`    |     &check; |          |       1 |
 | `sec.zhi`    |     &check; |          |       1 |
 

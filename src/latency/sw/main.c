@@ -1,4 +1,4 @@
-// computational correctness test for custom secure instructions
+// computational correctness test and latency measurement for custom secure instructions
 
 #include "demo_system.h"  // header file of this demo system 
 #include "gpio.h"         // header file of General-Purpose Input/Output (GPIO)
@@ -26,6 +26,9 @@ extern void sec_sw_test_asm(uint32_t *r);
 // class-3
 extern void sec_zlo_test_asm(uint32_t *r);
 extern void sec_zhi_test_asm(uint32_t *r);
+
+// instruction latency measurement
+extern void sec_insn_latency_measurement_asm(uint32_t *r);
 
 
 void test_uart_irq_handler(void) __attribute__((interrupt));
@@ -67,7 +70,7 @@ int main()
 
       // execute the micro-benchmarks and print the results
       puts("*******************************************\n");
-      puts("custom secure instructions test: \n");
+      puts("computational correctness test: \n");
       puts("-------------------------------------------\n");
       puts("class-1 test: \n");
       puts("-------------------------------------------\n");
@@ -356,7 +359,48 @@ int main()
       puthex(x[15]);
       putchar('\n');
       puts("-------------------------------------------\n");
-      puts("test ended! \n");
+      puts("instruction latency measurement: \n");
+      puts("-------------------------------------------\n");   
+      for (int i = 0; i < 16; i++) x[i] = 0;
+      sec_insn_latency_measurement_asm(x);
+      puts("sec.and       takes   "); 
+      puthex(x[0]);
+      puts(" cycles \n");
+      puts("sec.andi      takes   "); 
+      puthex(x[1]);
+      puts(" cycles \n");
+      puts("sec.or        takes   "); 
+      puthex(x[2]);
+      puts(" cycles \n");
+      puts("sec.ori       takes   "); 
+      puthex(x[3]);
+      puts(" cycles \n");
+      puts("sec.xor       takes   "); 
+      puthex(x[4]);
+      puts(" cycles \n");
+      puts("sec.xori      takes   "); 
+      puthex(x[5]);
+      puts(" cycles \n");
+      puts("sec.slli      takes   "); 
+      puthex(x[6]);
+      puts(" cycles \n");
+      puts("sec.srli      takes   "); 
+      puthex(x[7]);
+      puts(" cycles \n");
+      puts("sec.sw        takes   "); 
+      puthex(x[8]);
+      puts(" cycles \n");
+      puts("sec.lw        takes   "); 
+      puthex(x[9]);
+      puts(" cycles \n");
+      puts("sec.zlo       takes   "); 
+      puthex(x[10]);
+      puts(" cycles \n");
+      puts("sec.zhi       takes   "); 
+      puthex(x[11]);
+      puts(" cycles \n");
+      puts("-------------------------------------------\n");
+      puts("ended! \n");
       puts("*******************************************\n\n");
 
       // re-enable interrupts with output complete

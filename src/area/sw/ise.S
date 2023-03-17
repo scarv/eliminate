@@ -1,10 +1,10 @@
-// micro-benchmarks for custom secure instructions test
+// micro-benchmarks for custom secure instructions
 
 // class-1
 // extern void sec_and_test_asm(uint32_t *r, uint32_t *a, uint32_t *b);
 // extern void sec_andi_test_asm(uint32_t *r, uint32_t *a);
 // extern void sec_or_test_asm(uint32_t *r, uint32_t *a, uint32_t *b);
-// extern void sec_ori_test_asm (uint32_t *r, uint32_t *a);
+// extern void sec_ori_test_asm(uint32_t *r, uint32_t *a);
 // extern void sec_xor_test_asm(uint32_t *r, uint32_t *a, uint32_t *b);
 // extern void sec_xori_test_asm(uint32_t *r, uint32_t *a);
 // extern void sec_slli_test_asm(uint32_t *r, uint32_t *a);
@@ -17,6 +17,17 @@
 // class-3
 // extern void sec_zlo_test_asm(uint32_t *r);
 // extern void sec_zhi_test_asm(uint32_t *r);
+
+// instruction latency measurement
+// extern void sec_insn_latency_measurement_asm(uint32_t *r);
+
+
+// becasue there is a bug in ibex-demo-system re. `rdcycle` instruction; 
+// we therefore use `csrr` to read the `mcycle` CSR directly;  
+// the address of Machine Cycle Counter (mcycle) CSR is "0xB00"
+.macro read_cycle rd 
+ csrr \rd, 0xB00 
+.endm 
 
 
 // macros for defination of custom secure instructions
@@ -313,3 +324,107 @@ sec_zhi_test_asm:
   lw       s11, 36(sp)
   addi     sp, sp, 40
   ret
+
+// instruction latency measurement
+
+.global sec_insn_latency_measurement_asm
+sec_insn_latency_measurement_asm: 
+  // `sec.and`
+  read_cycle t0 
+  sec.and    t2, t3, t4 
+  read_cycle t1
+  sub        t0, t1, t0 
+  addi       t0, t0, -1  // `csrr` itself takes 1 cycle, which needs to be subtracted
+  sw         t0,  0(a0)
+
+  // `sec.andi`
+  read_cycle t0 
+  sec.andi   t2, t3, 0x0FF 
+  read_cycle t1
+  sub        t0, t1, t0 
+  addi       t0, t0, -1  // `csrr` itself takes 1 cycle, which needs to be subtracted
+  sw         t0,  4(a0) 
+
+  // `sec.or`
+  read_cycle t0 
+  sec.or     t2, t3, t4 
+  read_cycle t1
+  sub        t0, t1, t0 
+  addi       t0, t0, -1  // `csrr` itself takes 1 cycle, which needs to be subtracted
+  sw         t0,  8(a0) 
+
+  // `sec.ori`
+  read_cycle t0 
+  sec.ori    t2, t3, 0x0FF 
+  read_cycle t1
+  sub        t0, t1, t0 
+  addi       t0, t0, -1  // `csrr` itself takes 1 cycle, which needs to be subtracted
+  sw         t0, 12(a0) 
+
+  // `sec.xor`
+  read_cycle t0 
+  sec.xor    t2, t3, t4 
+  read_cycle t1
+  sub        t0, t1, t0 
+  addi       t0, t0, -1  // `csrr` itself takes 1 cycle, which needs to be subtracted
+  sw         t0, 16(a0) 
+
+  // `sec.xori`
+  read_cycle t0 
+  sec.xori   t2, t3, 0x0FF 
+  read_cycle t1
+  sub        t0, t1, t0 
+  addi       t0, t0, -1  // `csrr` itself takes 1 cycle, which needs to be subtracted
+  sw         t0, 20(a0)
+
+  // `sec.slli`
+  read_cycle t0 
+  sec.slli   t2, t3, 4 
+  read_cycle t1
+  sub        t0, t1, t0 
+  addi       t0, t0, -1  // `csrr` itself takes 1 cycle, which needs to be subtracted
+  sw         t0, 24(a0)
+
+  // `sec.srli`
+  read_cycle t0 
+  sec.srli   t2, t3, 4 
+  read_cycle t1
+  sub        t0, t1, t0 
+  addi       t0, t0, -1  // `csrr` itself takes 1 cycle, which needs to be subtracted
+  sw         t0, 28(a0)
+
+  // `sec.sw`
+  read_cycle t0 
+  sec.sw     t2, a0, 32 
+  read_cycle t1
+  sub        t0, t1, t0 
+  addi       t0, t0, -1  // `csrr` itself takes 1 cycle, which needs to be subtracted
+  sw         t0, 32(a0)
+
+  // `sec.lw`
+  addi       sp, sp, -4
+  read_cycle t0 
+  sec.lw     t2, a0, 36 
+  read_cycle t1
+  addi       sp, sp,  4
+  sub        t0, t1, t0 
+  addi       t0, t0, -1  // `csrr` itself takes 1 cycle, which needs to be subtracted
+  sw         t0, 36(a0)
+
+  // `sec.zlo`
+  read_cycle t0 
+  sec.zlo    0x000 
+  read_cycle t1
+  sub        t0, t1, t0 
+  addi       t0, t0, -1  // `csrr` itself takes 1 cycle, which needs to be subtracted
+  sw         t0, 40(a0)
+
+  // `sec.zlo`
+  read_cycle t0 
+  sec.zhi    0x000 
+  read_cycle t1
+  sub        t0, t1, t0 
+  addi       t0, t0, -1  // `csrr` itself takes 1 cycle, which needs to be subtracted
+  sw         t0, 44(a0)
+
+  ret 
