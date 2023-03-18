@@ -433,7 +433,7 @@ sec_insn_latency_measurement_asm:
   addi       t0, t0, -1  // `csrr` itself takes 1 cycle, which needs to be subtracted
   sw         t0, 40(a0)
 
-  // `sec.zlo`
+  // `sec.zhi`
   read_cycle t0 
   sec.zhi    0x000 
   read_cycle t1
