@@ -1,4 +1,0 @@
-# registers: x5 (share), x7 (random), x12 (share) 
-u_core.register_file_i.rf_reg_reg[191] = secret 0
-u_core.register_file_i.rf_reg_reg[251] = static_random
-u_core.register_file_i.rf_reg_reg[415] = secret 0

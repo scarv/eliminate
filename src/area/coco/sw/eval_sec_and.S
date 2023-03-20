@@ -1,4 +1,4 @@
-# this micor-benchmark should work with the label file `class-1.txt`
+# this micro-benchmark should work with the label file `eliminate-label.txt`
 
 .macro sec.and  rd, rs1, rs2 
 .insn r CUSTOM_0, 0, 0, \rd, \rs1, \rs2

@@ -1,4 +1,4 @@
-# this micor-benchmark should work with the label file `sec_slli.txt`
+# this micro-benchmark should work with the label file `eliminate-label.txt`
 
 .macro sec.slli rd, rs1, imm 
 .insn i CUSTOM_0, 6, \rd, \rs1, \imm

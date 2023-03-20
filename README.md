@@ -88,7 +88,7 @@ The non-leakage evaluation of ISE is done by using [Coco](https://github.com/IAI
     
     - Copy the software micro-benchmark folder `src/[area/latency]/coco/sw`, and paste it to `extern/coco-alma/examples/ibex/programs/` and rename it to `eliminate`.
 
-    - Copy the label folder `src/[area/latency]/coco/eliminate_label`, and paste it to `extern/coco-alma/examples/ibex/labels/`.
+    - Copy the label file `src/[area/latency]/coco/eliminate_label.txt`, and paste it to `extern/coco-alma/examples/ibex/labels/`.
 
     - Enter `extern/coco-alma` and follow the instructions of `README.md` to genearte the execution trace of each `eliminate` micro-benchmark and therefore evaluate the non-leakage of each custom secure instruction.  
 
