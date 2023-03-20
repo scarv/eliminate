@@ -120,24 +120,24 @@
 ### Class-2: memory access
 
 ```
-# get a Lower-Bit (LB) of the two MSBs
+# get a Lower-Bit (LB)
 #define LB(x) (x & 1) 
-# get a Higher-Bit (HB) of the two MSBs
+# get a Higher-Bit (HB)
 #define HB(x) ((x>>1) & 1) 
 
-# load a word from RAM (md selects the used lsmseed CSR)
+# load a word from RAM (md selects the lsmseed CSR to be used)
 .macro sec.lw  rd, rs1, imm, md 
 .insn i CUSTOM_1, 0, \rd,  \imm+1024*LB(\md)-2048*HB(\md)(\rs1)
 .endm
 
-# store a word to RAM (md selects the used lsmseed CSR)
+# store a word to RAM (md selects the lsmseed CSR to be used)
 .macro sec.sw  rs2, rs1, imm, md
 .insn s CUSTOM_1, 1, \rs2, \imm+1024*LB(\md)-2048*HB(\md)(\rs1)
 .endm 
 ```
 
 - There are four load-store-mask seed (`lsmseed`) CSRs used by class-2 instructions, 
-whose addresses are defined as (see Table 2.1 of [The RISC-V Instruction Set Manual
+whose addresses are defined as follows (see Table 2.1 of [The RISC-V Instruction Set Manual
 Volume II: Privileged Architecture](https://github.com/riscv/riscv-isa-manual/releases/download/Priv-v1.12/riscv-privileged-20211203.pdf) which defines the use and accessibility of different CSR addresses):
 ```
 #define lsmseed0 0x800

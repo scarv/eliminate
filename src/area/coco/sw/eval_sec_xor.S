@@ -1,3 +1,4 @@
+# this micor-benchmark should work with the label file `class-1.txt`
 
 .macro sec.xor  rd, rs1, rs2 
 .insn r CUSTOM_0, 4, 0, \rd, \rs1, \rs2

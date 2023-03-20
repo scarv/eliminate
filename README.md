@@ -77,20 +77,23 @@ The performance evaluation of ISE is done with using [Ibex Demo System](https://
 
 ### Non-leakage evaluation 
 
-The non-leakage evaluation of ISE is done by using [Coco](https://github.com/IAIK/coco-alma) tool 
-(i.e., `extern/coco-alma` and `extern/coco-ibex`). 
+The non-leakage evaluation of ISE is done by using [Coco](https://github.com/IAIK/coco-alma) (i.e., `extern/coco-alma` and `extern/coco-ibex`). 
 
-- User can choose either a manual modification or using the patch to apply the change to Coco-Ibex core:
+- User can choose either a manual modification or using the patch to apply the change to 
+[Coco-Ibex core](https://github.com/IAIK/coco-ibex) and [CoCoAlma](https://github.com/IAIK/coco-alma):
 
   - Manual modification
 
     - Copy all the files in `src/[ara/latency]/coco/hw/` and replace the original files in `extern/coco-ibex/rtl/`.
     
-    - Copy the corresponding software micro-benchmark folder `src/[area/latency]/coco/sw`, and paste it to `extern/coco-alma/examples/ibex/programs/` and rename it to `eliminate`.
+    - Copy the software micro-benchmark folder `src/[area/latency]/coco/sw`, and paste it to `extern/coco-alma/examples/ibex/programs/` and rename it to `eliminate`.
 
-    - Copy the corresponding label file `src/[area/latency]/coco/eliminate_label.txt`, and paste it to `extern/coco-alma/examples/ibex/labels/`.
+    - Copy the label folder `src/[area/latency]/coco/eliminate_label`, and paste it to `extern/coco-alma/examples/ibex/labels/`.
 
-    - Enter `extern/coco-alma` and follow the instructions of `README.md` to genearte the execution trace of each of `eliminate` micro-benchmarks and therefore evaluate the non-leakage of each custom secure instruction.    
+    - Enter `extern/coco-alma` and follow the instructions of `README.md` to genearte the execution trace of each `eliminate` micro-benchmark and therefore evaluate the non-leakage of each custom secure instruction.  
+
+  - Using the patch 
+    - **TBA**  
 
 <!--- ==================================================================== --->
 
@@ -100,12 +103,14 @@ The non-leakage evaluation of ISE is done by using [Coco](https://github.com/IAI
 
 | Instruction | Computation | Non-leakage | Latency | 
 | :---------: | :---------: | :---------: | :-----: |
-| `sec.and`   |     &check; |             |      2  |
-| `sec.andi`  |     &check; |             |      2  |
-| `sec.or`    |     &check; |             |      2  |
-| `sec.ori`   |     &check; |             |      2  |
+| `sec.and`   |     &check; |     &check; |      2  |
+| `sec.andi`  |     &check; |     &check; |      2  |
+| `sec.or`    |     &check; |     &check; |      2  |
+| `sec.ori`   |     &check; |     &check; |      2  |
 | `sec.xor`   |     &check; |     &check; |      2  |
 | `sec.xori`  |     &check; |     &check; |      2  |
+| `sec.slli`  |     &check; |     &check; |      2  |
+| `sec.srli`  |     &check; |     &check; |      2  |
 | `sec.lw`    |     &check; |             |      6  |
 | `sec.sw`    |     &check; |             |      4  |
 | `sec.zlo`   |     &check; |             |      1  |
@@ -121,6 +126,8 @@ The non-leakage evaluation of ISE is done by using [Coco](https://github.com/IAI
 | `sec.ori`   |     &check; |             |      1  |
 | `sec.xor`   |     &check; |             |      1  |
 | `sec.xori`  |     &check; |             |      1  |
+| `sec.slli`  |     &check; |             |      1  |
+| `sec.srli`  |     &check; |             |      1  |
 | `sec.lw`    |     &check; |             |      2  |
 | `sec.sw`    |     &check; |             |      2  |
 | `sec.zlo`   |     &check; |             |      1  |
