@@ -63,18 +63,6 @@
 .endm 
 ```
 
-- In order to use the `sec.lw` properly, 
-in the prologue of assembler code
-the masked implementation developer has to leave a word-size space in the stack for `sec.lw` to push and pop 0, 
-and then restore the correct address of stack in the epilogue 
-e.g., 
-```
-# in the prologue of masked assembler implementation 
-addi sp, sp, -4
-# in the epilogue of masked assembler implementation 
-addi sp, sp,  4 
-``` 
-
 ### Class-3: register erasure 
 
 ```

@@ -853,7 +853,7 @@ module ibex_decoder #(
                 // store 0 to the stack first, then load it again from the stack 
                 // to flush the load/store buffer
                 alu_op_b_mux_sel_o         = OP_B_IMM;
-                imm_b_mux_sel_o            = IMM_B_ZERO;  // imm = 0, i.e., fixed to use 0(sp)
+                imm_b_mux_sel_o            = IMM_B_MINUS4;  // imm = -4, i.e., fixed to use -4(sp)
               end else begin 
                 // load the data needed from RAM
                 alu_op_b_mux_sel_o         = OP_B_IMM;

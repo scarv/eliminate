@@ -271,8 +271,8 @@ package ibex_pkg;
     IMM_B_INCR_PC,
     // ++ eliminate
     // IMM_B_INCR_ADDR 
-    IMM_B_INCR_ADDR, 
-    IMM_B_ZERO
+    IMM_B_INCR_ADDR,
+    IMM_B_MINUS4
     // -- eliminate 
   } imm_b_sel_e;
 

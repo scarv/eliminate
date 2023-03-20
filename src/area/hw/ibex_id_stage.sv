@@ -395,7 +395,7 @@ module ibex_id_stage #(
         IMM_B_INCR_PC:   imm_b = instr_is_compressed_i ? 32'h2 : 32'h4;
         IMM_B_INCR_ADDR: imm_b = 32'h4;
         // ++ eliminate 
-        IMM_B_ZERO:      imm_b = 32'b0;
+        IMM_B_MINUS4:    imm_b = 32'hffff_fffc; // -4 in hex
         // -- eliminate
         default:         imm_b = 32'h4;
       endcase
