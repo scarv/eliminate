@@ -77,10 +77,20 @@ The performance evaluation of ISE is done with using [Ibex Demo System](https://
 
 ### Non-leakage evaluation 
 
-The non-leakage evaluation of ISE is done by using [coco](https://github.com/IAIK/coco-alma) tool 
+The non-leakage evaluation of ISE is done by using [Coco](https://github.com/IAIK/coco-alma) tool 
 (i.e., `extern/coco-alma` and `extern/coco-ibex`). 
 
-- **TBA**.
+- User can choose either a manual modification or using the patch to apply the change to Coco-Ibex core:
+
+  - Manual modification
+
+    - Copy all the files in `src/[ara/latency]/coco/hw/` and replace the original files in `extern/coco-ibex/rtl/`.
+    
+    - Copy the corresponding software micro-benchmark folder `src/[area/latency]/coco/sw`, and paste it to `extern/coco-alma/examples/ibex/programs/` and rename it to `eliminate`.
+
+    - Copy the corresponding label file `src/[area/latency]/coco/eliminate_label.txt`, and paste it to `extern/coco-alma/examples/ibex/labels/`.
+
+    - Enter `extern/coco-alma` and follow the instructions of `README.md` to genearte the execution trace of each of `eliminate` micro-benchmarks and therefore evaluate the non-leakage of each custom secure instruction.    
 
 <!--- ==================================================================== --->
 
@@ -90,12 +100,12 @@ The non-leakage evaluation of ISE is done by using [coco](https://github.com/IAI
 
 | Instruction | Computation | Non-leakage | Latency | 
 | :---------: | :---------: | :---------: | :-----: |
-| `sec.and`   |     &check; |     &check; |      2  |
+| `sec.and`   |     &check; |             |      2  |
 | `sec.andi`  |     &check; |             |      2  |
-| `sec.or`    |     &check; |     &check; |      2  |
+| `sec.or`    |     &check; |             |      2  |
 | `sec.ori`   |     &check; |             |      2  |
 | `sec.xor`   |     &check; |     &check; |      2  |
-| `sec.xori`  |     &check; |             |      2  |
+| `sec.xori`  |     &check; |     &check; |      2  |
 | `sec.lw`    |     &check; |             |      6  |
 | `sec.sw`    |     &check; |             |      4  |
 | `sec.zlo`   |     &check; |             |      1  |
