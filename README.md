@@ -90,7 +90,11 @@ The non-leakage evaluation of ISE is done by using [Coco](https://github.com/IAI
 
     - Copy the label file `src/[area/latency]/coco/eliminate_label.txt`, and paste it to `extern/coco-alma/examples/ibex/labels/`.
 
-    - Enter `extern/coco-alma` and follow the instructions of `README.md` to genearte the execution trace of each `eliminate` micro-benchmark and therefore evaluate the non-leakage of each custom secure instruction.  
+    - Enter `extern/coco-alma` and follow the instructions of `README.md` to 
+      - parse the core 
+      - compile the micro-benchmark
+      - generate the execution trace  
+      - verify non-leakage of custom secure instruction 
 
   - Using the patch 
     - **TBA**  
@@ -113,8 +117,8 @@ The non-leakage evaluation of ISE is done by using [Coco](https://github.com/IAI
 | `sec.srli`  |     &check; |     &check; |      2  |
 | `sec.lw`    |     &check; |             |      6  |
 | `sec.sw`    |     &check; |             |      4  |
-| `sec.zlo`   |     &check; |             |      1  |
-| `sec.zhi`   |     &check; |             |      1  |
+| `sec.zlo`   |     &check; |     &check; |      1  |
+| `sec.zhi`   |     &check; |     &check; |      1  |
 
 ### Latency-optimised version 
 
