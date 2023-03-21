@@ -124,14 +124,14 @@ The non-leakage evaluation of ISE is done by using [Coco](https://github.com/IAI
 
 | Instruction | Computation | Non-leakage | Latency | 
 | :---------: | :---------: | :---------: | :-----: |
-| `sec.and`   |     &check; |             |      1  |
-| `sec.andi`  |     &check; |             |      1  |
-| `sec.or`    |     &check; |             |      1  |
-| `sec.ori`   |     &check; |             |      1  |
-| `sec.xor`   |     &check; |             |      1  |
-| `sec.xori`  |     &check; |             |      1  |
-| `sec.slli`  |     &check; |             |      1  |
-| `sec.srli`  |     &check; |             |      1  |
+| `sec.and`   |     &check; |     &check; |      1  |
+| `sec.andi`  |     &check; |     &check; |      1  |
+| `sec.or`    |     &check; |     &check; |      1  |
+| `sec.ori`   |     &check; |     &check; |      1  |
+| `sec.xor`   |     &check; |     &check; |      1  |
+| `sec.xori`  |     &check; |     &check; |      1  |
+| `sec.slli`  |     &check; |     &check; |      1  |
+| `sec.srli`  |     &check; |     &check; |      1  |
 | `sec.lw`    |     &check; |             |      2  |
 | `sec.sw`    |     &check; |             |      2  |
 | `sec.zlo`   |     &check; |             |      1  |
