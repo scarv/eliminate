@@ -103,7 +103,7 @@ The non-leakage evaluation of ISE is done by using [Coco](https://github.com/IAI
 
 ## Working status re. instruction evaluation
 
-### Area-optimised version 
+### Area-optimised (AO) version 
 
 | Instruction | Computation | Non-leakage | Latency | 
 | :---------: | :---------: | :---------: | :-----: |
@@ -120,7 +120,7 @@ The non-leakage evaluation of ISE is done by using [Coco](https://github.com/IAI
 | `sec.zlo`   |     &check; |     &check; |      1  |
 | `sec.zhi`   |     &check; |     &check; |      1  |
 
-### Latency-optimised version 
+### Latency-optimised (LO) version 
 
 | Instruction | Computation | Non-leakage | Latency | 
 | :---------: | :---------: | :---------: | :-----: |
@@ -136,5 +136,17 @@ The non-leakage evaluation of ISE is done by using [Coco](https://github.com/IAI
 | `sec.sw`    |     &check; |     &check; |      2  |
 | `sec.zlo`   |     &check; |             |      1  |
 | `sec.zhi`   |     &check; |             |      1  |
+
+### Hardware overhead 
+
+| Core                   | Reg     | LUT     | DSP  | 
+| :--------------------  | :-----: | :-----: | :--: |
+| Ibex                   |         |         |      |
+| Ibex + AO class-1      |         |         |      |
+| Ibex + AO class-1-2    |         |         |      |
+| Ibex + AO class-1-2-3  |         |         |      |
+| Ibex + LO class-1      |         |         |      |
+| Ibex + LO class-1-2    |         |         |      |
+| Ibex + LO class-1-2-3  |         |         |      |
 
 <!--- ==================================================================== --->
