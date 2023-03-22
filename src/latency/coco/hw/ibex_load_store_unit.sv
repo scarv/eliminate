@@ -15,6 +15,11 @@
 
 module ibex_load_store_unit
 (
+    // ++ eliminate 
+    input  logic         sec_ldst_i,
+    input  logic [31:0]  lsu_lsmseed_i,
+    // -- eliminate
+
     input  logic         clk_i,
     input  logic         rst_ni,
 
@@ -476,21 +481,46 @@ module ibex_load_store_unit
   // Outputs //
   /////////////
 
+  // ++ eliminate 
+  logic [31:0] data_rdata_masked;
+  logic [31:0] data_wdata_masked;
+  logic [31:0] data_lsm;
+
+  ibex_lsm_generator ibex_lsm_generator_i (
+    .data_addr_i(data_addr_o),
+    .lsmseed_i(lsu_lsmseed_i),
+    .data_lsm_o(data_lsm)
+  );
+
+  assign data_rdata_masked = data_rdata_ext ^ data_lsm;
+
+  // output to register file
+  // assign lsu_rdata_o = data_rdata_ext;
+  assign lsu_rdata_o = (sec_ldst_i) ? data_rdata_masked : data_rdata_ext;
+
+  // -- eliminate
+
   assign data_or_pmp_err    = lsu_err_q | data_err_i | pmp_err_q;
   assign lsu_resp_valid_o   = (data_rvalid_i | pmp_err_q) & (ls_fsm_cs == IDLE);
   assign lsu_rdata_valid_o  = (ls_fsm_cs == IDLE) & data_rvalid_i & ~data_or_pmp_err & ~data_we_q;
 
   // output to register file
-  assign lsu_rdata_o = data_rdata_ext;
+  // assign lsu_rdata_o = data_rdata_ext;
 
   // output data address must be word aligned
   assign data_addr_w_aligned = {data_addr[31:2], 2'b00};
 
   // output to data interface
   assign data_addr_o   = data_addr_w_aligned;
-  assign data_wdata_o  = data_wdata;
+  // assign data_wdata_o  = data_wdata;
   assign data_we_o     = lsu_we_i;
   assign data_be_o     = data_be;
+
+  // ++ eliminate 
+  // assign data_wdata_o = data_wdata;
+  assign data_wdata_masked = data_wdata ^ data_lsm;
+  assign data_wdata_o = (sec_ldst_i) ? data_wdata_masked : data_wdata;
+  // -- elimiate
 
   // output to ID stage: mtval + AGU for misaligned transactions
   assign addr_last_o   = addr_last_q;

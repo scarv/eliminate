@@ -14,6 +14,11 @@ package ibex_pkg;
 /////////////
 
 typedef enum logic [6:0] {
+  // ++ eliminate
+  OPCODE_SEC_LDST = 7'h2b,  // CUSTOM_1: secure LoaD and STore instructions
+  // OPCODE_SEC_ERSL = 7'h5b,  // CUSTOM_1: secure ERAsure instruction (for Low  registers)
+  // OPCODE_SEC_ERSH = 7'h7b,  // CUSTOM_3: secure ERAsure instruction (for High registers)
+  // -- eliminate 
   OPCODE_LOAD     = 7'h03,
   OPCODE_MISC_MEM = 7'h0f,
   OPCODE_OP_IMM   = 7'h13,
@@ -176,14 +181,19 @@ typedef enum logic {
 } op_b_sel_e;
 
 // Immediate b selection
-typedef enum logic [2:0] {
+// typedef enum logic [2:0] {
+typedef enum logic [3:0] {
   IMM_B_I,
   IMM_B_S,
   IMM_B_B,
   IMM_B_U,
   IMM_B_J,
   IMM_B_INCR_PC,
-  IMM_B_INCR_ADDR
+  IMM_B_INCR_ADDR,
+  // ++ eliminate
+  SEC_IMM_B_I, // the 10-bit immediate in a custom secure load instruction
+  SEC_IMM_B_S  // the 10-bit immediate in a custom secure store instruction
+  // -- eliminate
 } imm_b_sel_e;
 
 // Regfile write data selection
@@ -281,6 +291,14 @@ typedef struct packed {
 
 // CSRs
 typedef enum logic[11:0] {
+  // ++ eliminate 
+  // Load-Store-Mask SEED CSRs (using non-standard read/write user CSRs)
+  CSR_LSMSEED0 = 12'h800,
+  CSR_LSMSEED1 = 12'h801,
+  CSR_LSMSEED2 = 12'h802,
+  CSR_LSMSEED3 = 12'h803,
+  // -- eliminate
+
   // Machine information
   CSR_MHARTID   = 12'hF14,
 

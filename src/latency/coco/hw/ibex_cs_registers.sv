@@ -24,6 +24,12 @@ module ibex_cs_registers #(
     parameter bit          RV32E            = 0,
     parameter bit          RV32M            = 0
 ) (
+    // ++ eliminate 
+    input  logic                 sec_ldst_i, 
+    input  logic [ 1:0]          lsmseed_idx_i,
+    output logic [31:0]          lsu_lsmseed_o,
+    // -- eliminate 
+
     // Clock and Reset
     input  logic                 clk_i,
     input  logic                 rst_ni,
@@ -169,6 +175,12 @@ module ibex_cs_registers #(
   logic [31:0] exception_pc;
 
   // CSRs
+  // ++ eliminate
+  logic        lsmseed0_en, lsmseed1_en, lsmseed2_en, lsmseed3_en;
+  logic [31:0] lsmseed0_q,  lsmseed1_q,  lsmseed2_q,  lsmseed3_q;
+  logic [31:0] lsmseed;
+  // -- eliminate
+
   priv_lvl_e   priv_lvl_q, priv_lvl_d;
   Status_t     mstatus_q, mstatus_d;
   irqs_t       mie_q, mie_d;
@@ -253,12 +265,38 @@ module ibex_cs_registers #(
   assign mip.irq_external = irq_external_i;
   assign mip.irq_fast     = irq_fast_i;
 
+  // ++ eliminate
+  // lsmask seed read logic 
+  always_comb begin
+    lsmseed  = 32'b0;
+
+    unique case (lsmseed_idx_i) 
+      2'b00: lsmseed = lsmseed0_q;
+      2'b01: lsmseed = lsmseed1_q;
+      2'b10: lsmseed = lsmseed2_q;
+      2'b11: lsmseed = lsmseed3_q;
+      default: ;
+    endcase 
+  end
+  // lsmseed0 is always read by default, therefore it needs to check whether 
+  // the lsmseed is really needed.
+  assign lsu_lsmseed_o = (sec_ldst_i) ? lsmseed : '0;
+  // -- eliminate
+
   // read logic
   always_comb begin
     csr_rdata_int = '0;
     illegal_csr   = 1'b0;
 
     unique case (csr_addr_i)
+      // ++ eliminate 
+      // lsmseed
+      CSR_LSMSEED0: csr_rdata_int = lsmseed0_q;
+      CSR_LSMSEED1: csr_rdata_int = lsmseed1_q;
+      CSR_LSMSEED2: csr_rdata_int = lsmseed2_q;
+      CSR_LSMSEED3: csr_rdata_int = lsmseed3_q;
+      // -- eliminate
+
       // mhartid: unique hardware thread id
       CSR_MHARTID: csr_rdata_int = hart_id_i;
 
@@ -451,8 +489,23 @@ module ibex_cs_registers #(
     mhpmcounter_we   = '0;
     mhpmcounterh_we  = '0;
 
+    // ++ eliminate 
+    lsmseed0_en = 1'b0;
+    lsmseed1_en = 1'b0;
+    lsmseed2_en = 1'b0;
+    lsmseed3_en = 1'b0;
+    // -- eliminate    
+
     if (csr_we_int) begin
       unique case (csr_addr_i)
+
+        // ++ eliminate 
+        CSR_LSMSEED0: lsmseed0_en = 1'b1;
+        CSR_LSMSEED1: lsmseed1_en = 1'b1;
+        CSR_LSMSEED2: lsmseed2_en = 1'b1;
+        CSR_LSMSEED3: lsmseed3_en = 1'b1;
+        // -- eliminate
+
         // mstatus: IE bit
         CSR_MSTATUS: begin
           mstatus_d = '{
@@ -657,6 +710,66 @@ module ibex_cs_registers #(
   // clock upon WFI (must be purely combinational).
   assign irqs_o        = mip & mie_q;
   assign irq_pending_o = |irqs_o;
+
+  // ++ eliminate 
+
+  // LSMSEED0
+  ibex_csr #(
+    // .Width     (32),
+    // .ShadowCopy(1'b0),
+    // .ResetValue('0)
+  ) u_lsmseed0_csr (
+    .clk_i     (clk_i),
+    .rst_ni    (rst_ni),
+    .wr_data_i (csr_wdata_int),
+    .wr_en_i   (lsmseed0_en),
+    .rd_data_o (lsmseed0_q),
+    .rd_error_o()
+  );
+
+  // LSMSEED1
+  ibex_csr #(
+    // .Width     (32),
+    // .ShadowCopy(1'b0),
+    // .ResetValue('0)
+  ) u_lsmseed1_csr (
+    .clk_i     (clk_i),
+    .rst_ni    (rst_ni),
+    .wr_data_i (csr_wdata_int),
+    .wr_en_i   (lsmseed1_en),
+    .rd_data_o (lsmseed1_q),
+    .rd_error_o()
+  );
+
+  // LSMSEED2
+  ibex_csr #(
+    // .Width     (32),
+    // .ShadowCopy(1'b0),
+    // .ResetValue('0)
+  ) u_lsmseed2_csr (
+    .clk_i     (clk_i),
+    .rst_ni    (rst_ni),
+    .wr_data_i (csr_wdata_int),
+    .wr_en_i   (lsmseed2_en),
+    .rd_data_o (lsmseed2_q),
+    .rd_error_o()
+  );
+
+  // LSMSEED3
+  ibex_csr #(
+    // .Width     (32),
+    // .ShadowCopy(1'b0),
+    // .ResetValue('0)
+  ) u_lsmseed3_csr (
+    .clk_i     (clk_i),
+    .rst_ni    (rst_ni),
+    .wr_data_i (csr_wdata_int),
+    .wr_en_i   (lsmseed3_en),
+    .rd_data_o (lsmseed3_q),
+    .rd_error_o()
+  );
+
+  // -- eliminate
 
   // actual registers
   always_ff @(posedge clk_i or negedge rst_ni) begin

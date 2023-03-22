@@ -15,3 +15,8 @@ ibex_prefetch_buffer.sv
 ibex_fetch_fifo.sv
 ibex_register_file_ff.sv
 ibex_core.sv
+// ++ eliminate 
+ibex_lsm_generator.sv
+keccak_f100_2rounds.sv
+keccak_pkg.sv
+// -- eliminate

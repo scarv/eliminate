@@ -108,6 +108,13 @@ module ibex_core #(
   localparam int unsigned PMP_NUM_CHAN  = 2;
   localparam bit          DataIndTiming = SecureIbex;
 
+  // ++ eliminate 
+  // logic [31:0] rf_sec_ers;
+  logic        sec_ldst;
+  logic [ 1:0] csr_lsmseed_idx;
+  logic [31:0] lsu_lsmseed;
+  // -- eliminate 
+
   // IF/ID signals
   logic        instr_valid_id;
   logic        instr_new_id;
@@ -496,6 +503,12 @@ module ibex_core #(
       .DataIndTiming   ( DataIndTiming   ),
       .WritebackStage  ( WritebackStage  )
   ) id_stage_i (
+      // ++ eliminate 
+      .sec_ldst_o(sec_ldst),
+      .csr_lsmseed_idx_o(csr_lsmseed_idx),
+      // .rf_sec_ers_o(rf_sec_ers),
+      // -- eliminate 
+
       .clk_i                        ( clk                      ),
       .rst_ni                       ( rst_ni                   ),
 
@@ -715,6 +728,11 @@ module ibex_core #(
   assign data_req_o = data_req_out & ~pmp_req_err[PMP_D];
 
   ibex_load_store_unit load_store_unit_i (
+      // ++ eliminate 
+      .sec_ldst_i(sec_ldst),
+      .lsu_lsmseed_i(lsu_lsmseed),
+      // -- eliminate
+
       .clk_i                 ( clk                 ),
       .rst_ni                ( rst_ni              ),
 
@@ -801,6 +819,10 @@ module ibex_core #(
       .RV32E(RV32E),
       .DataWidth(32)
   ) register_file_i (
+      // ++ eliminate
+      // .sec_ers_i    ( rf_sec_ers ),
+      // -- eliminate
+
       .clk_i        ( clk_i        ),
       .rst_ni       ( rst_ni       ),
 
@@ -907,6 +929,12 @@ module ibex_core #(
       .RV32E            ( RV32E            ),
       .RV32M            ( RV32M            )
   ) cs_registers_i (
+      // ++ eliminate
+      .sec_ldst_i(sec_ldst),
+      .lsmseed_idx_i(csr_lsmseed_idx),
+      .lsu_lsmseed_o(lsu_lsmseed),
+      // -- eliminate
+
       .clk_i                   ( clk                      ),
       .rst_ni                  ( rst_ni                   ),
 

@@ -25,6 +25,12 @@ module ibex_id_stage #(
     parameter bit BranchTargetALU = 0,
     parameter bit WritebackStage  = 0
 ) (
+    // ++ eliminate 
+    output logic                      sec_ldst_o,
+    // output logic [31:0]               rf_sec_ers_o,
+    output logic [ 1:0]               csr_lsmseed_idx_o,
+    // -- eliminate
+
     input  logic                      clk_i,
     input  logic                      rst_ni,
 
@@ -229,6 +235,11 @@ module ibex_id_stage #(
   logic [31:0] imm_j_type;
   logic [31:0] zimm_rs1_type;
 
+  // ++ eliminate 
+  logic [31:0] sec_imm_i_type;
+  logic [31:0] sec_imm_s_type;
+  // -- eliminate 
+
   logic [31:0] imm_a;       // contains the immediate for operand b
   logic [31:0] imm_b;       // contains the immediate for operand b
 
@@ -347,6 +358,10 @@ module ibex_id_stage #(
     // Full main ALU immediate MUX for Operand B
     always_comb begin : immediate_b_mux
       unique case (imm_b_mux_sel)
+        // ++ eliminate 
+        SEC_IMM_B_I:     imm_b = sec_imm_i_type;
+        SEC_IMM_B_S:     imm_b = sec_imm_s_type;
+        // -- eliminate 
         IMM_B_I:         imm_b = imm_i_type;
         IMM_B_S:         imm_b = imm_s_type;
         IMM_B_B:         imm_b = imm_b_type;
@@ -402,6 +417,14 @@ module ibex_id_stage #(
       .RV32B           ( RV32B           ),
       .BranchTargetALU ( BranchTargetALU )
   ) decoder_i (
+      // ++ eliminate 
+      .sec_ldst_o(sec_ldst_o),
+      .csr_lsmseed_idx_o(csr_lsmseed_idx_o),
+      .sec_imm_i_type_o(sec_imm_i_type),
+      .sec_imm_s_type_o(sec_imm_s_type),
+      // .rf_sec_ers_o(rf_sec_ers_o),
+      // -- eliminate   
+
       .clk_i                           ( clk_i                ),
       .rst_ni                          ( rst_ni               ),
 

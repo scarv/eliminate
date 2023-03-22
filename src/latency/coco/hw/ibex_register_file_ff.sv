@@ -16,6 +16,10 @@ module ibex_register_file #(
     parameter bit RV32E              = 0,
     parameter int unsigned DataWidth = 32
 ) (
+    // ++ eliminate 
+    // input  logic [31:0]          sec_ers_i,
+    // -- eliminate
+
     // Clock and Reset
     input  logic                 clk_i,
     input  logic                 rst_ni,
@@ -90,7 +94,7 @@ module ibex_register_file #(
   logic [NUM_WORDS  :0] we_a_zero;            // to record which register needs to be cleared 
   logic [NUM_WORDS  :0] we_a_idle;            // to record which register is the current idle register
   logic [NUM_WORDS-1:0] we_a_idx;             // to record which entry of the index list needs to be updated
-  logic [NUM_WORDS  :0] we_a_ers;             // to record which registers need to be erased
+  // logic [NUM_WORDS  :0] we_a_ers;             // to record which registers need to be erased
 
   always_comb begin : we_a_decoder
     for (int unsigned i = 1; i < NUM_WORDS+1; i++) begin
@@ -106,9 +110,9 @@ module ibex_register_file #(
       // check which entry of the index list needs to be updated 
       we_a_idx[i]  = (waddr_a_i == 5'(i)) ? we_a_i : 1'b0;
       // check which registers need to be erased
-      we_a_ers[rf_idx[i]] = sec_ers_i[i];
+      // we_a_ers[rf_idx[i]] = sec_ers_i[i];
     end
-    we_a_ers[rf_idle] = 1'b0;
+    // we_a_ers[rf_idle] = 1'b0;
   end
 
 
@@ -119,7 +123,8 @@ module ibex_register_file #(
     always_ff @(posedge clk_i or negedge rst_ni) begin
       if (!rst_ni) begin 
         rf_reg_q <= '0;
-      end else if (we_a_ers[i] | we_a_zero[i]) begin
+      // end else if (we_a_ers[i] | we_a_zero[i]) begin
+      end else if (we_a_zero[i]) begin
         rf_reg_q <= '0;             
       end else if (we_a_idle[i]) begin
         rf_reg_q <= wdata_a_i; 
@@ -187,7 +192,6 @@ module ibex_register_file #(
   // assign rdata_b_o = rf_reg[raddr_b_i];
 // `endif
   `else 
-  // ++ eliminate 
 
   assign rf_reg[0] = '0;
 

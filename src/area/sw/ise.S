@@ -237,7 +237,7 @@ sec_zlo_test_asm:
   li       x13, 13
   li       x14, 14
   li       x15, 15
-  // erase x5-x15 (0xFFE0 = 0b 0000 0111 1111 1111)
+  // erase x5-x15 (0xFFE0 = 0b 1111 1111 1110 0000)
   sec.zlo  0xFFE0     
   // store the values of x5-x15 for printing  
   sw       x5,   0(t3)   

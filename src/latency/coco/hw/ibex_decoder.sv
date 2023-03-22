@@ -25,6 +25,14 @@ module ibex_decoder #(
     parameter bit RV32B           = 0,
     parameter bit BranchTargetALU = 0
 ) (
+    // ++ eliminate 
+    output logic                 sec_ldst_o,            // whether it's a custom secure load or store
+    output logic [ 1:0]          csr_lsmseed_idx_o,     // the index of lsmseed CSR to be used
+    output logic [31:0]          sec_imm_i_type_o,      // the 10-bit immediate in a custom secure load instruction
+    output logic [31:0]          sec_imm_s_type_o,      // the 10-bit immediate in a custom secure store instruction
+    // output logic [31:0]          rf_sec_ers_o,          // the mask for secure erasure
+    // -- eliminate 
+
     input  logic                 clk_i,
     input  logic                 rst_ni,
 
@@ -138,6 +146,11 @@ module ibex_decoder #(
   assign imm_b_type_o = { {19{instr[31]}}, instr[31], instr[7], instr[30:25], instr[11:8], 1'b0 };
   assign imm_u_type_o = { instr[31:12], 12'b0 };
   assign imm_j_type_o = { {12{instr[31]}}, instr[19:12], instr[20], instr[30:21], 1'b0 };
+  // ++ eliminate
+  // 10-bit zero-extended immediate
+  assign sec_imm_i_type_o = { 22'b0, instr[29:20] };              
+  assign sec_imm_s_type_o = { 22'b0, instr[29:25], instr[11:7] };
+  // -- eliminate
 
   // immediate for CSR manipulation (zero extended)
   assign zimm_rs1_type_o = { 27'b0, instr[`REG_S1] }; // rs1
@@ -189,6 +202,12 @@ module ibex_decoder #(
   /////////////
 
   always_comb begin
+    // ++ eliminate 
+    sec_ldst_o            = 1'b0; 
+    csr_lsmseed_idx_o     = 2'b0;  // use the lsmseed0 CSR by default
+    // rf_sec_ers_o          = 32'b0; // do not erase any registers by default
+    // -- eliminate 
+
     jump_in_dec_o         = 1'b0;
     jump_set_o            = 1'b0;
     branch_in_dec_o       = 1'b0;
@@ -221,6 +240,55 @@ module ibex_decoder #(
     opcode                = opcode_e'(instr[6:0]);
 
     unique case (opcode)
+
+      // ++ eliminate 
+
+      ///////////////////////////
+      // SECURE LOAD AND STORE //
+      ///////////////////////////
+
+      OPCODE_SEC_LDST: begin // custom secure load and store instructions
+        rf_ren_a_o          = 1'b1;
+        data_req_o          = 1'b1;
+        data_type_o         = 2'b00; // word size
+        sec_ldst_o          = 1'b1;
+        csr_lsmseed_idx_o   = instr[31:30]; // 2 MSBs selects the lsmseed CSR to be used 
+
+        if (instr[14:12] == 3'b000) begin // secure load 
+          data_we_o         = 1'b0; // load 
+          illegal_insn      = 1'b0;
+        end else if (instr[14:12] == 3'b001) begin // secure store 
+          rf_ren_b_o        = 1'b1;
+          data_we_o         = 1'b1; // store
+          illegal_insn      = 1'b0;
+        end else begin 
+          illegal_insn      = 1'b1; 
+        end
+      end
+
+      /////////////////////
+      // SECURE ERSASURE //
+      /////////////////////
+
+      // OPCODE_SEC_ERSL: begin // custom secure erasing instructions (low)
+      //   rf_sec_ers_o = {16'b0, instr[27:12]};
+
+      //   unique case (instr[31:28]) 
+      //     4'b0000: illegal_insn = 1'b0;
+      //     default: illegal_insn = 1'b1;
+      //   endcase 
+      // end 
+
+      // OPCODE_SEC_ERSH: begin // custom secure erasing instructions (high)
+      //   rf_sec_ers_o = {instr[27:12], 16'b0};
+
+      //   unique case (instr[31:28]) 
+      //     4'b0000: illegal_insn = 1'b0;
+      //     default: illegal_insn = 1'b1;
+      //   endcase 
+      // end
+
+      // -- eliminate
 
       ///////////
       // Jumps //
@@ -623,6 +691,26 @@ module ibex_decoder #(
     div_sel_o          = 1'b0;
 
     unique case (opcode_alu)
+
+      // ++ eliminate 
+
+      ////////////////////
+      // SEC load/store //
+      ////////////////////
+
+      OPCODE_SEC_LDST: begin
+        alu_op_a_mux_sel_o  = OP_A_REG_A;
+        alu_op_b_mux_sel_o  = OP_B_IMM; 
+        alu_operator_o      = ALU_ADD;
+        
+        unique case (instr_alu[14:12])
+          3'b000: imm_b_mux_sel_o     = SEC_IMM_B_I;
+          3'b001: imm_b_mux_sel_o     = SEC_IMM_B_S;
+          default: ;
+        endcase
+      end
+
+      // -- eliminate
 
       ///////////
       // Jumps //
