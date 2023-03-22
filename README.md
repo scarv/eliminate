@@ -132,7 +132,7 @@ The non-leakage evaluation of ISE is done by using [Coco](https://github.com/IAI
 | `sec.xori`  |     &check; |     &check; |      1  |
 | `sec.slli`  |     &check; |     &check; |      1  |
 | `sec.srli`  |     &check; |     &check; |      1  |
-| `sec.lw`    |     &check; |             |      2  |
+| `sec.lw`    |     &check; |     &check; |      2  |
 | `sec.sw`    |     &check; |     &check; |      2  |
 | `sec.zlo`   |     &check; |             |      1  |
 | `sec.zhi`   |     &check; |             |      1  |
