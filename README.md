@@ -73,7 +73,7 @@ The performance evaluation of ISE is done with using [Ibex Demo System](https://
 
 - Hardware overhead measurement
 
-  a) FPGA-option (only): check the vivado ultilisation report.
+  a) FPGA-option (only): check the vivado GUI report ultilisation.
 
 ### Non-leakage evaluation 
 
@@ -101,7 +101,7 @@ The non-leakage evaluation of ISE is done by using [Coco](https://github.com/IAI
 
 <!--- ==================================================================== --->
 
-## Working status re. instruction evaluation
+## Instruction evaluation
 
 ### Area-optimised (AO) version 
 
@@ -134,19 +134,19 @@ The non-leakage evaluation of ISE is done by using [Coco](https://github.com/IAI
 | `sec.srli`  |     &check; |     &check; |      1  |
 | `sec.lw`    |     &check; |     &check; |      2  |
 | `sec.sw`    |     &check; |     &check; |      2  |
-| `sec.zlo`   |     &check; |             |      1  |
-| `sec.zhi`   |     &check; |             |      1  |
+| `sec.zlo`   |     &check; |          -  |      1  |
+| `sec.zhi`   |     &check; |          -  |      1  |
 
 ### Hardware overhead 
 
-| Core                   | Reg     | LUT     | DSP  | 
-| :--------------------  | :-----: | :-----: | :--: |
-| Ibex                   |         |         |      |
-| Ibex + AO class-1      |         |         |      |
-| Ibex + AO class-1-2    |         |         |      |
-| Ibex + AO class-1-2-3  |         |         |      |
-| Ibex + LO class-1      |         |         |      |
-| Ibex + LO class-1-2    |         |         |      |
-| Ibex + LO class-1-2-3  |         |         |      |
+| Core                   |  Regs  |  LUTs  |  DSPs  | 
+| :--------------------  | :----: | :----: | :----: |
+| Ibex                   |  2364  |  3936  |    10  |
+| Ibex + AO class-1      |        |        |        |
+| Ibex + AO class-1-2    |        |        |        |
+| Ibex + AO class-1-2-3  |  2366  |  4926  |    10  |
+| Ibex + LO class-1      |  2585  |  5185  |    10  |
+| Ibex + LO class-1-2    |  2713  |  5528  |    10  |
+| Ibex + LO class-1-2-3  |  2745  |  7423  |    10  |
 
 <!--- ==================================================================== --->
