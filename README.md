@@ -149,16 +149,4 @@ The non-leakage evaluation of ISE is done by using [Coco](https://github.com/IAI
 | Ibex + LO class-1+2    |  2713  |  5000  |    10  |
 | Ibex + LO class-1+2+3  |  2745  |  7008  |    10  |
 
-### Hardware overhead (Vivado 2022.2)
-
-| Core                   |  Regs  |  LUTs  |  DSPs  | 
-| :--------------------  | :----: | :----: | :----: |
-| Ibex                   |  2364  |  3936  |    10  |
-| Ibex + AO class-1      |  2361  |  3870  |    10  |
-| Ibex + AO class-1+2    |  2366  |  3823  |    10  |
-| Ibex + AO class-1+2+3  |  2366  |  4926  |    10  |
-| Ibex + LO class-1      |  2585  |  5185  |    10  |
-| Ibex + LO class-1+2    |  2713  |  5528  |    10  |
-| Ibex + LO class-1+2+3  |  2745  |  7423  |    10  |
-
 <!--- ==================================================================== --->
