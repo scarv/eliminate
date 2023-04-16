@@ -109,7 +109,6 @@ module ibex_core #(
   localparam bit          DataIndTiming = SecureIbex;
 
   // ++ eliminate 
-  // logic [31:0] rf_sec_ers;
   logic        sec_ldst;
   logic [ 1:0] csr_lsmseed_idx;
   logic [31:0] lsu_lsmseed;
@@ -506,7 +505,6 @@ module ibex_core #(
       // ++ eliminate 
       .sec_ldst_o(sec_ldst),
       .csr_lsmseed_idx_o(csr_lsmseed_idx),
-      // .rf_sec_ers_o(rf_sec_ers),
       // -- eliminate 
 
       .clk_i                        ( clk                      ),
@@ -819,10 +817,6 @@ module ibex_core #(
       .RV32E(RV32E),
       .DataWidth(32)
   ) register_file_i (
-      // ++ eliminate
-      // .sec_ers_i    ( rf_sec_ers ),
-      // -- eliminate
-
       .clk_i        ( clk_i        ),
       .rst_ni       ( rst_ni       ),
 

@@ -27,7 +27,6 @@ module ibex_id_stage #(
 ) (
     // ++ eliminate 
     output logic                      sec_ldst_o,
-    // output logic [31:0]               rf_sec_ers_o,
     output logic [ 1:0]               csr_lsmseed_idx_o,
     // -- eliminate
 
@@ -422,7 +421,6 @@ module ibex_id_stage #(
       .csr_lsmseed_idx_o(csr_lsmseed_idx_o),
       .sec_imm_i_type_o(sec_imm_i_type),
       .sec_imm_s_type_o(sec_imm_s_type),
-      // .rf_sec_ers_o(rf_sec_ers_o),
       // -- eliminate   
 
       .clk_i                           ( clk_i                ),
