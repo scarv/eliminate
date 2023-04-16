@@ -7,8 +7,8 @@
 
 # now to test the case using secure store (i.e., `sec.sw`)
 
-.macro sec.sw  rs2, rs1, imm, md
-.insn s CUSTOM_1, 1, \rs2, \imm+1024*(\md&1)-2048*((\md>>1)&1)(\rs1)
+.macro sec.sw  rs2, rs1, imm, ms
+.insn s CUSTOM_1, 1, \rs2, \imm+1024*(\ms&1)-2048*((\ms>>1)&1)(\rs1)
 .endm 
 
 .org 0x80

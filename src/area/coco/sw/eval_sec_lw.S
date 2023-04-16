@@ -7,18 +7,17 @@
 
 # now to test the case using secure load (i.e., `sec.lw`)
 
-.macro sec.lw   rd, rs1, imm
-.insn i CUSTOM_1, 0, \rd, \imm(\rs1)
-.endm  
+.macro sec.lw  rd, rs1, imm, ms 
+.insn i CUSTOM_1, 0, \rd,  \imm+1024*(\ms&1)-2048*((\ms>>1)&1)(\rs1)
+.endm
 
 .org 0x80
 nop
 li       x13, 0x20
 sw       x5,  0(x13)
-and      x6,  x6, x6
 # overwrite a share with another share to check if there's now 
 # an architecutral leakage and/or a micro-architectural leakage
-sec.lw   x12, x13, 0
+sec.lw   x12, x13, 0, 0
 nop
 nop
 nop

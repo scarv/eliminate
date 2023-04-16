@@ -7,18 +7,18 @@
 
 # now to test the case using secure store (i.e., `sec.sw`)
 
-.macro sec.sw   rs2, rs1, imm
-.insn s CUSTOM_1, 1, \rs2, \imm(\rs1)
+.macro sec.sw  rs2, rs1, imm, ms
+.insn s CUSTOM_1, 1, \rs2, \imm+1024*(\ms&1)-2048*((\ms>>1)&1)(\rs1)
 .endm 
 
 .org 0x80
 nop
 li       x13, 0x20
-sec.sw   x5,  x13, 0
-and      x6,  x6, x6
+sec.sw   x5,  x13, 0, 0
+and      x6,  x6,  x6
 # overwrite a share with another share to check if there's now 
 # an architecutral leakage and/or a micro-architectural leakage
-sec.sw   x12, x13, 0
+sec.sw   x12, x13, 0, 0
 nop
 nop
 nop

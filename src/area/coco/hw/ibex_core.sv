@@ -113,7 +113,6 @@ module ibex_core #(
   logic        lsu_sec_load;
   logic        lsu_sec_store;
   logic        rf_sec_bwlogic_first_cycle;
-  logic [31:0] rf_sec_ers;
   // -- eliminate 
 
   // IF/ID signals
@@ -509,7 +508,6 @@ module ibex_core #(
       .rf_sec_bwlogic_first_cycle_o(rf_sec_bwlogic_first_cycle),
       .lsu_sec_load_o(lsu_sec_load),
       .lsu_sec_store_o(lsu_sec_store),
-      .rf_sec_ers_o(rf_sec_ers),
       // -- eliminate
 
       .clk_i                        ( clk                      ),
@@ -828,7 +826,6 @@ module ibex_core #(
   ) register_file_i (
       // ++ eliminate 
       .sec_bwlogic_first_cycle_i(rf_sec_bwlogic_first_cycle),
-      .sec_ers_i(rf_sec_ers),
       // -- eliminate 
 
       .clk_i        ( clk_i        ),

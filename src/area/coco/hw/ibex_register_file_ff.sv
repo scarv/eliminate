@@ -18,7 +18,6 @@ module ibex_register_file #(
 ) (
     // ++ eliminate 
     input  logic                 sec_bwlogic_first_cycle_i,
-    input  logic [31:0]          sec_ers_i,
     // -- eliminate 
 
     // Clock and Reset
@@ -81,10 +80,8 @@ module ibex_register_file #(
     `else 
       for (int r = 1; r < NUM_WORDS; r++) begin
         // ++ eliminate
-        if (sec_ers_i[r]) begin 
-          rf_reg_tmp[r] <= '{default:'0};
-        end else if (we_a_dec[r]) begin 
-          rf_reg_tmp[r] <= (sec_bwlogic_first_cycle_i) ? '{default:'0} : wdata_a_i;
+        if (we_a_dec[r]) begin 
+          rf_reg_tmp[r] <= (sec_bwlogic_first_cycle_i) ? '0 : wdata_a_i;
         end
           // -- eliminate
       end

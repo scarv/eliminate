@@ -17,8 +17,6 @@ typedef enum logic [6:0] {
   // ++ eliminate
   OPCODE_SEC_BWLG = 7'h0b,  // CUSTOM_0: secure BitWise-LoGical instructions 
   OPCODE_SEC_LDST = 7'h2b,  // CUSTOM_1: secure LoaD and STore instructions
-  OPCODE_SEC_ERSL = 7'h5b,  // CUSTOM_1: secure ERAsure instruction (for Low  registers)
-  OPCODE_SEC_ERSH = 7'h7b,  // CUSTOM_3: secure ERAsure instruction (for High registers)
   // -- eliminate  
   OPCODE_LOAD     = 7'h03,
   OPCODE_MISC_MEM = 7'h0f,
@@ -192,7 +190,9 @@ typedef enum logic [2:0] {
   // ++ eliminate
   // IMM_B_INCR_ADDR 
   IMM_B_INCR_ADDR,
-  IMM_B_MINUS4
+  IMM_B_MINUS4,
+  SEC_IMM_B_I, // the 10-bit immediate in a custom secure load instruction
+  SEC_IMM_B_S  // the 10-bit immediate in a custom secure store instruction
   // -- eliminate 
 } imm_b_sel_e;
 

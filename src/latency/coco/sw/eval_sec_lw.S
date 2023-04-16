@@ -1,11 +1,11 @@
 # this micro-benchmark should work with the label file `eliminate-label.txt`
 
-.macro sec.sw  rs2, rs1, imm, md
-.insn s CUSTOM_1, 1, \rs2, \imm+1024*(\md&1)-2048*((\md>>1)&1)(\rs1)
+.macro sec.sw  rs2, rs1, imm, ms
+.insn s CUSTOM_1, 1, \rs2, \imm+1024*(\ms&1)-2048*((\ms>>1)&1)(\rs1)
 .endm 
 
-.macro sec.lw  rd, rs1, imm, md 
-.insn i CUSTOM_1, 0, \rd,  \imm+1024*(\md&1)-2048*((\md>>1)&1)(\rs1)
+.macro sec.lw  rd, rs1, imm, ms 
+.insn i CUSTOM_1, 0, \rd,  \imm+1024*(\ms&1)-2048*((\ms>>1)&1)(\rs1)
 .endm
 
 .org 0x80
