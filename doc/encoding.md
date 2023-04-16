@@ -52,29 +52,20 @@
 ### Class-2: memory access
 
 ```
-# load a word from RAM
-.macro sec.lw   rd, rs1, imm
-.insn i CUSTOM_1, 0, \rd, \imm(\rs1)
-.endm 
+# get a Lower-Bit (LB)
+#define LB(x) (x & 1) 
+# get a Higher-Bit (HB)
+#define HB(x) ((x>>1) & 1) 
 
-# store a word to RAM
-.macro sec.sw   rs2, rs1, imm
-.insn s CUSTOM_1, 1, \rs2, \imm(\rs1)
-.endm 
-```
-
-### Class-3: register erasure 
-
-```
-# erase the low registers x0-x15
-.macro sec.zlo  imm
-.insn u CUSTOM_2, x0, \imm
+# load a word from RAM (ms selects the lsmseed CSR to be used)
+.macro sec.lw  rd, rs1, imm, ms 
+.insn i CUSTOM_1, 0, \rd,  \imm+1024*LB(\ms)-2048*HB(\ms)(\rs1)
 .endm
 
-# erase the high registers x16-x31
-.macro sec.zhi  imm 
-.insn u CUSTOM_3, x0, \imm
-.endm
+# store a word to RAM (ms selects the lsmseed CSR to be used)
+.macro sec.sw  rs2, rs1, imm, ms
+.insn s CUSTOM_1, 1, \rs2, \imm+1024*LB(\ms)-2048*HB(\ms)(\rs1)
+.endm 
 ```
 
 <!--- ==================================================================== --->
@@ -125,14 +116,14 @@
 # get a Higher-Bit (HB)
 #define HB(x) ((x>>1) & 1) 
 
-# load a word from RAM (md selects the lsmseed CSR to be used)
-.macro sec.lw  rd, rs1, imm, md 
-.insn i CUSTOM_1, 0, \rd,  \imm+1024*LB(\md)-2048*HB(\md)(\rs1)
+# load a word from RAM (ms selects the lsmseed CSR to be used)
+.macro sec.lw  rd, rs1, imm, ms 
+.insn i CUSTOM_1, 0, \rd,  \imm+1024*LB(\ms)-2048*HB(\ms)(\rs1)
 .endm
 
-# store a word to RAM (md selects the lsmseed CSR to be used)
-.macro sec.sw  rs2, rs1, imm, md
-.insn s CUSTOM_1, 1, \rs2, \imm+1024*LB(\md)-2048*HB(\md)(\rs1)
+# store a word to RAM (ms selects the lsmseed CSR to be used)
+.macro sec.sw  rs2, rs1, imm, ms
+.insn s CUSTOM_1, 1, \rs2, \imm+1024*LB(\ms)-2048*HB(\ms)(\rs1)
 .endm 
 ```
 
@@ -156,18 +147,5 @@ csrrw    x0, lsmseed1, t1
 csrrw    x0, lsmseed2, t2
 csrrw    x0, lsmseed3, t3
 ``` 
-
-### Class-3: register erasure
-```
-# erase the low registers x0-x15
-.macro sec.zlo  imm
-.insn u CUSTOM_2, x0, \imm
-.endm
-
-# erase the high registers x16-x31
-.macro sec.zhi  imm 
-.insn u CUSTOM_3, x0, \imm
-.endm
-```
 
 <!--- ==================================================================== --->

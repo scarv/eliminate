@@ -69,12 +69,12 @@
 // get a Higher-Bit (HB) of the two MSBs
 #define HB(x) ((x>>1) & 1) 
 
-.macro sec.lw  rd, rs1, imm, md 
-.insn i CUSTOM_1, 0, \rd,  \imm+1024*LB(\md)-2048*HB(\md)(\rs1)
+.macro sec.lw  rd, rs1, imm, ms 
+.insn i CUSTOM_1, 0, \rd,  \imm+1024*LB(\ms)-2048*HB(\ms)(\rs1)
 .endm
 
-.macro sec.sw  rs2, rs1, imm, md
-.insn s CUSTOM_1, 1, \rs2, \imm+1024*LB(\md)-2048*HB(\md)(\rs1)
+.macro sec.sw  rs2, rs1, imm, ms
+.insn s CUSTOM_1, 1, \rs2, \imm+1024*LB(\ms)-2048*HB(\ms)(\rs1)
 .endm 
 
 // micro-benchmarks
