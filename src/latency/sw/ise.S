@@ -32,35 +32,35 @@
 // class-1
 
 .macro sec.and  rd, rs1, rs2 
- and  \rd, \rs1, \rs2
+  and  \rd, \rs1, \rs2
 .endm
 
 .macro sec.andi rd, rs1, rs2 
- andi \rd, \rs1, \rs2
+  andi \rd, \rs1, \rs2
 .endm
 
 .macro sec.or   rd, rs1, rs2 
- or   \rd, \rs1, \rs2 
+  or   \rd, \rs1, \rs2 
 .endm
 
 .macro sec.ori  rd, rs1, rs2 
- ori  \rd, \rs1, \rs2 
+  ori  \rd, \rs1, \rs2 
 .endm
 
 .macro sec.xor  rd, rs1, rs2 
- xor  \rd, \rs1, \rs2 
+  xor  \rd, \rs1, \rs2 
 .endm
 
 .macro sec.xori rd, rs1, rs2 
- xori \rd, \rs1, \rs2 
+  xori \rd, \rs1, \rs2 
 .endm
 
 .macro sec.slli rd, rs1, imm 
- slli \rd, \rs1, \imm
+  slli \rd, \rs1, \imm
 .endm
 
 .macro sec.srli rd, rs1, imm 
- srli \rd, \rs1, \imm
+  srli \rd, \rs1, \imm
 .endm
 
 // class-2

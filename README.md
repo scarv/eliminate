@@ -13,11 +13,11 @@ the check by users.
 ├── extern                  - external submodules
 └── src                     - source code
     ├── area                  - source code for area-optimised version 
-    │   ├── coco                - source code for non-leakage evaluation with coco     
+    │   ├── coco                - source code for security evaluation with coco     
     │   ├── hw                  - source code for hardware (i.e., ISE implementation)
     │   └── sw                  - source code for software (i.e., micro-benchmarks)
     └── latency               - source code for latency-optimised version
-        ├── coco                - source code for non-leakage evaluation with coco     
+        ├── coco                - source code for security evaluation with coco     
         ├── hw                  - source code for hardware (i.e., ISE implementation)
         └── sw                  - source code for software (i.e., micro-benchmarks)
 ```
@@ -75,9 +75,9 @@ The performance evaluation of ISE is done with using [Ibex Demo System](https://
 
   a) FPGA-option (only): check the vivado GUI report ultilisation.
 
-### Non-leakage evaluation 
+### Security evaluation 
 
-The non-leakage evaluation of ISE is done by using [Coco](https://github.com/IAIK/coco-alma) (i.e., `extern/coco-alma` and `extern/coco-ibex`). 
+The security evaluation (i.e., no leakage stemming from overwriting) of ISE is done by using [Coco](https://github.com/IAIK/coco-alma) (i.e., `extern/coco-alma` and `extern/coco-ibex`). 
 
 - User can choose either a manual modification or using the patch to apply the change to 
 [Coco-Ibex core](https://github.com/IAIK/coco-ibex) and [CoCoAlma](https://github.com/IAIK/coco-alma):
@@ -94,7 +94,7 @@ The non-leakage evaluation of ISE is done by using [Coco](https://github.com/IAI
       - parse the core 
       - compile the micro-benchmark
       - generate the execution trace  
-      - verify non-leakage of custom secure instruction 
+      - verify security of custom secure instruction 
 
   - Using the patch 
     - **TBA**  
@@ -103,35 +103,35 @@ The non-leakage evaluation of ISE is done by using [Coco](https://github.com/IAI
 
 ## Instruction evaluation
 
-### Area-optimised (AO) version 
+### Area-Optimised (AO) version 
 
-| Instruction | Computation | Non-leakage | Latency | 
-| :---------: | :---------: | :---------: | :-----: |
-| `sec.and`   |     &check; |     &check; |      2  |
-| `sec.andi`  |     &check; |     &check; |      2  |
-| `sec.or`    |     &check; |     &check; |      2  |
-| `sec.ori`   |     &check; |     &check; |      2  |
-| `sec.xor`   |     &check; |     &check; |      2  |
-| `sec.xori`  |     &check; |     &check; |      2  |
-| `sec.slli`  |     &check; |     &check; |      2  |
-| `sec.srli`  |     &check; |     &check; |      2  |
-| `sec.lw`    |     &check; |     &check; |      6  |
-| `sec.sw`    |     &check; |     &check; |      4  |
+| Instruction | Computation | Security | Latency | 
+| :---------: | :---------: | :------: | :-----: |
+| `sec.and`   |     &check; |  &check; |      2  |
+| `sec.andi`  |     &check; |  &check; |      2  |
+| `sec.or`    |     &check; |  &check; |      2  |
+| `sec.ori`   |     &check; |  &check; |      2  |
+| `sec.xor`   |     &check; |  &check; |      2  |
+| `sec.xori`  |     &check; |  &check; |      2  |
+| `sec.slli`  |     &check; |  &check; |      2  |
+| `sec.srli`  |     &check; |  &check; |      2  |
+| `sec.lw`    |     &check; |  &check; |      6  |
+| `sec.sw`    |     &check; |  &check; |      4  |
 
-### Latency-optimised (LO) version 
+### Latency-Optimised (LO) version 
 
-| Instruction | Computation | Non-leakage | Latency | 
-| :---------: | :---------: | :---------: | :-----: |
-| `sec.and`   |     &check; |     &check; |      1  |
-| `sec.andi`  |     &check; |     &check; |      1  |
-| `sec.or`    |     &check; |     &check; |      1  |
-| `sec.ori`   |     &check; |     &check; |      1  |
-| `sec.xor`   |     &check; |     &check; |      1  |
-| `sec.xori`  |     &check; |     &check; |      1  |
-| `sec.slli`  |     &check; |     &check; |      1  |
-| `sec.srli`  |     &check; |     &check; |      1  |
-| `sec.lw`    |     &check; |     &check; |      2  |
-| `sec.sw`    |     &check; |     &check; |      2  |
+| Instruction | Computation | Security | Latency | 
+| :---------: | :---------: | :------: | :-----: |
+| `sec.and`   |     &check; |  &check; |      1  |
+| `sec.andi`  |     &check; |  &check; |      1  |
+| `sec.or`    |     &check; |  &check; |      1  |
+| `sec.ori`   |     &check; |  &check; |      1  |
+| `sec.xor`   |     &check; |  &check; |      1  |
+| `sec.xori`  |     &check; |  &check; |      1  |
+| `sec.slli`  |     &check; |  &check; |      1  |
+| `sec.srli`  |     &check; |  &check; |      1  |
+| `sec.lw`    |     &check; |  &check; |      2  |
+| `sec.sw`    |     &check; |  &check; |      2  |
 
 ### Hardware overhead (Vivado 2019.1)
 
