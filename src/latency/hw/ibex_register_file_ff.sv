@@ -17,10 +17,6 @@ module ibex_register_file_ff #(
   parameter bit                   WrenCheck         = 0,
   parameter logic [DataWidth-1:0] WordZeroVal       = '0
 ) (
-  // ++ eliminate 
-  input  logic [31:0]          sec_ers_i,
-  // -- eliminate
-
   // Clock and Reset
   input  logic                 clk_i,
   input  logic                 rst_ni,
@@ -67,7 +63,6 @@ module ibex_register_file_ff #(
   logic [NUM_WORDS  :0] we_a_zero;            // to record which register needs to be cleared 
   logic [NUM_WORDS  :0] we_a_idle;            // to record which register is the current idle register
   logic [NUM_WORDS-1:0] we_a_idx;             // to record which entry of the index list needs to be updated
-  logic [NUM_WORDS  :0] we_a_ers;             // to record which registers need to be erased
 
   always_comb begin : we_a_decoder
     for (int unsigned i = 1; i < NUM_WORDS+1; i++) begin
@@ -82,10 +77,7 @@ module ibex_register_file_ff #(
     for (int unsigned i = 1; i < NUM_WORDS; i++) begin 
       // check which entry of the index list needs to be updated 
       we_a_idx[i]  = (waddr_a_i == 5'(i)) ? we_a_i : 1'b0;
-      // check which registers need to be erased
-      we_a_ers[rf_idx[i]] = sec_ers_i[i];
     end
-    we_a_ers[rf_idle] = 1'b0;
   end
 
   // -- eliminate 
@@ -119,11 +111,10 @@ module ibex_register_file_ff #(
     // ++ eliminate 
     // logic unused_strobe;
     // assign unused_strobe = we_a_dec[0]; // this is never read from in this case
-    logic unused_strobe0, unused_strobe1, unused_strobe2, unused_strobe3; // unused strobes 
+    logic unused_strobe0, unused_strobe1, unused_strobe2; // unused strobes 
     assign unused_strobe0 = we_a_zero[0];
     assign unused_strobe1 = we_a_idle[0];
     assign unused_strobe2 = we_a_idx[0];
-    assign unused_strobe3 = we_a_ers[0];
     // -- eliminate
 
     assign err_o = 1'b0;
@@ -153,7 +144,7 @@ module ibex_register_file_ff #(
     always_ff @(posedge clk_i or negedge rst_ni) begin
       if (!rst_ni) begin 
         rf_reg_q <= WordZeroVal;
-      end else if (we_a_ers[i] | we_a_zero[i]) begin
+      end else if (we_a_zero[i]) begin
         rf_reg_q <= WordZeroVal;             
       end else if (we_a_idle[i]) begin
         rf_reg_q <= wdata_a_i; 

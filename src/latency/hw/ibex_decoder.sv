@@ -24,7 +24,6 @@ module ibex_decoder #(
   output logic [ 1:0]          csr_lsmseed_idx_o,     // the index of lsmseed CSR to be used
   output logic [31:0]          sec_imm_i_type_o,      // the 10-bit immediate in a custom secure load instruction
   output logic [31:0]          sec_imm_s_type_o,      // the 10-bit immediate in a custom secure store instruction
-  output logic [31:0]          rf_sec_ers_o,          // the mask for secure erasure
   // -- eliminate 
 
   input  logic                 clk_i,
@@ -219,7 +218,6 @@ module ibex_decoder #(
     // ++ eliminate 
     sec_ldst_o            = 1'b0; 
     csr_lsmseed_idx_o     = 2'b0;  // use the lsmseed0 CSR by default
-    rf_sec_ers_o          = 32'b0; // do not erase any registers by default
     // -- eliminate 
 
     jump_in_dec_o         = 1'b0;
@@ -279,29 +277,7 @@ module ibex_decoder #(
           illegal_insn      = 1'b1; 
         end
       end
-
-      /////////////////////
-      // SECURE ERSASURE //
-      /////////////////////
-
-      OPCODE_SEC_ERSL: begin // custom secure erasing instructions (low)
-        rf_sec_ers_o = {16'b0, instr[27:12]};
-
-        unique case (instr[31:28]) 
-          4'b0000: illegal_insn = 1'b0;
-          default: illegal_insn = 1'b1;
-        endcase 
-      end 
-
-      OPCODE_SEC_ERSH: begin // custom secure erasing instructions (high)
-        rf_sec_ers_o = {instr[27:12], 16'b0};
-
-        unique case (instr[31:28]) 
-          4'b0000: illegal_insn = 1'b0;
-          default: illegal_insn = 1'b1;
-        endcase 
-      end
-
+      
       // -- eliminate
 
       ///////////

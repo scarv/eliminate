@@ -44,10 +44,6 @@ module ibex_core import ibex_pkg::*; #(
   parameter int unsigned DmHaltAddr        = 32'h1A110800,
   parameter int unsigned DmExceptionAddr   = 32'h1A110808
 ) (
-  // ++ eliminate 
-  output logic [31:0]                  rf_sec_ers_o,
-  // -- eliminate 
-
   // Clock and Reset
   input  logic                         clk_i,
   input  logic                         rst_ni,
@@ -550,7 +546,6 @@ module ibex_core import ibex_pkg::*; #(
     // ++ eliminate 
     .sec_ldst_o(sec_ldst),
     .csr_lsmseed_idx_o(csr_lsmseed_idx),
-    .rf_sec_ers_o(rf_sec_ers_o),
     // -- eliminate 
 
     .clk_i (clk_i),

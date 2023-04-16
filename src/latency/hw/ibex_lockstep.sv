@@ -346,10 +346,6 @@ module ibex_lockstep import ibex_pkg::*; #(
     .DmHaltAddr        ( DmHaltAddr        ),
     .DmExceptionAddr   ( DmExceptionAddr   )
   ) u_shadow_core (
-    // ++ eliminate 
-    .rf_sec_ers_o        (shadow_inputs_q[0].rf_sec_ers),
-    // -- eliminate
-
     .clk_i               (clk_i),
     .rst_ni              (rst_shadow_n),
 

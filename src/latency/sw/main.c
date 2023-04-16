@@ -23,10 +23,6 @@ extern void lsmseed_rw_test_asm(uint32_t *r);
 extern void sec_lw_test_asm(uint32_t *r);
 extern void sec_sw_test_asm(uint32_t *r);
 
-// class-3
-extern void sec_zlo_test_asm(uint32_t *r);
-extern void sec_zhi_test_asm(uint32_t *r);
-
 // instruction latency measurement
 extern void sec_insn_latency_measurement_asm(uint32_t *r);
 
@@ -55,9 +51,6 @@ int main()
   // to execute the first test fast
   uint64_t last_elapsed_time = -1;
 
-  // variables for custom instruction 
-  uint32_t a = 0x01234567UL, b = 0x0F0F0F0FUL, r, x[16];
-
   while (1) {
     uint64_t cur_time = get_elapsed_time();
 
@@ -67,6 +60,9 @@ int main()
       // disable interrupts whilst outputting to prevent output for RX IRQ
       // happening in the middle
       set_global_interrupt_enable(0);
+
+      // variables for custom instruction 
+      uint32_t a = 0x01234567UL, b = 0x0F0F0F0FUL, r, x[10];
 
       // execute the micro-benchmarks and print the results
       puts("*******************************************\n");
@@ -262,103 +258,6 @@ int main()
       puthex(x[3]);
       putchar('\n');
       puts("-------------------------------------------\n");
-      puts("class-3 test: \n");
-      puts("-------------------------------------------\n");
-      puts("sec.zlo  test:  erase x5-x15  \n");
-      for (int i = 0; i < 16; i++) x[i] = 0xFFFFFFFFUL;
-      puts("current x5-x15  all = "); 
-      puthex(x[0]);
-      putchar('\n');
-      sec_zlo_test_asm(x);
-      puts("obtained result x5  = "); 
-      puthex(x[0]);
-      putchar('\n');
-      puts("obtained result x6  = "); 
-      puthex(x[1]);
-      putchar('\n');
-      puts("obtained result x7  = "); 
-      puthex(x[2]);
-      putchar('\n');
-      puts("obtained result x8  = "); 
-      puthex(x[3]);
-      putchar('\n');
-      puts("obtained result x9  = "); 
-      puthex(x[4]);
-      putchar('\n');
-      puts("obtained result x10 = "); 
-      puthex(x[5]);
-      putchar('\n');
-      puts("obtained result x11 = "); 
-      puthex(x[6]);
-      putchar('\n');
-      puts("obtained result x12 = "); 
-      puthex(x[7]);
-      putchar('\n');
-      puts("obtained result x13 = "); 
-      puthex(x[8]);
-      putchar('\n');
-      puts("obtained result x14 = "); 
-      puthex(x[9]);
-      putchar('\n');
-      puts("obtained result x15 = "); 
-      puthex(x[10]);
-      putchar('\n');
-      puts("-------------------------------------------\n");
-      puts("sec.zhi  test:  erase x16-x31  \n");
-      for (int i = 0; i < 16; i++) x[i] = 0xFFFFFFFFUL;
-      puts("current x16-x31 all = "); 
-      puthex(x[0]);
-      putchar('\n');
-      sec_zhi_test_asm(x);
-      puts("obtained result x16 = "); 
-      puthex(x[0]);
-      putchar('\n');
-      puts("obtained result x17 = "); 
-      puthex(x[1]);
-      putchar('\n');
-      puts("obtained result x18 = "); 
-      puthex(x[2]);
-      putchar('\n');
-      puts("obtained result x19 = "); 
-      puthex(x[3]);
-      putchar('\n');
-      puts("obtained result x20 = "); 
-      puthex(x[4]);
-      putchar('\n');
-      puts("obtained result x21 = "); 
-      puthex(x[5]);
-      putchar('\n');
-      puts("obtained result x22 = "); 
-      puthex(x[6]);
-      putchar('\n');
-      puts("obtained result x23 = "); 
-      puthex(x[7]);
-      putchar('\n');
-      puts("obtained result x24 = "); 
-      puthex(x[8]);
-      putchar('\n');
-      puts("obtained result x25 = "); 
-      puthex(x[9]);
-      putchar('\n');
-      puts("obtained result x26 = "); 
-      puthex(x[10]);
-      putchar('\n');
-      puts("obtained result x27 = "); 
-      puthex(x[11]);
-      putchar('\n');
-      puts("obtained result x28 = "); 
-      puthex(x[12]);
-      putchar('\n');
-      puts("obtained result x29 = "); 
-      puthex(x[13]);
-      putchar('\n');
-      puts("obtained result x30 = "); 
-      puthex(x[14]);
-      putchar('\n');
-      puts("obtained result x31 = "); 
-      puthex(x[15]);
-      putchar('\n');
-      puts("-------------------------------------------\n");
       puts("instruction latency measurement: \n");
       puts("-------------------------------------------\n");   
       for (int i = 0; i < 16; i++) x[i] = 0;
@@ -392,12 +291,6 @@ int main()
       puts(" cycles \n");
       puts("sec.lw        takes   "); 
       puthex(x[9]);
-      puts(" cycles \n");
-      puts("sec.zlo       takes   "); 
-      puthex(x[10]);
-      puts(" cycles \n");
-      puts("sec.zhi       takes   "); 
-      puthex(x[11]);
       puts(" cycles \n");
       puts("-------------------------------------------\n");
       puts("ended! \n");

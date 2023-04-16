@@ -155,10 +155,6 @@ module ibex_top import ibex_pkg::*; #(
   localparam int unsigned NumAddrScrRounds  = ICacheScramble ? 2 : 0;
   localparam int unsigned NumDiffRounds     = NumAddrScrRounds;
 
-  // ++ eliminate  
-  logic [31:0]                 rf_sec_ers;
-  // -- eliminate   
-
   // Clock signals
   logic                        clk;
   ibex_mubi_t                  core_busy_d, core_busy_q;
@@ -311,10 +307,6 @@ module ibex_top import ibex_pkg::*; #(
     .DmHaltAddr       (DmHaltAddr),
     .DmExceptionAddr  (DmExceptionAddr)
   ) u_ibex_core (
-    // ++ eliminate 
-    .rf_sec_ers_o(rf_sec_ers),
-    // -- eliminate 
-
     .clk_i(clk),
     .rst_ni,
 
@@ -429,10 +421,6 @@ module ibex_top import ibex_pkg::*; #(
       .WrenCheck        (RegFileWrenCheck),
       .WordZeroVal      (RegFileDataWidth'(prim_secded_pkg::SecdedInv3932ZeroWord))
     ) register_file_i (
-      // ++ eliminate 
-      .sec_ers_i(rf_sec_ers),
-      // -- eliminate 
-
       .clk_i (clk),
       .rst_ni(rst_ni),
 

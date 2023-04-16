@@ -29,7 +29,6 @@ module ibex_id_stage #(
 ) (
   // ++ eliminate 
   output logic                      sec_ldst_o,
-  output logic [31:0]               rf_sec_ers_o,
   output logic [ 1:0]               csr_lsmseed_idx_o,
   // -- eliminate
 
@@ -354,10 +353,6 @@ module ibex_id_stage #(
     // Reduced main ALU immediate MUX for Operand B
     always_comb begin : immediate_b_mux
       unique case (imm_b_mux_sel)
-        // ++ eliminate 
-        SEC_IMM_B_I:     imm_b = sec_imm_i_type;
-        SEC_IMM_B_S:     imm_b = sec_imm_s_type;
-        // -- eliminate 
         IMM_B_I:         imm_b = imm_i_type;
         IMM_B_S:         imm_b = imm_s_type;
         IMM_B_U:         imm_b = imm_u_type;
@@ -458,7 +453,6 @@ module ibex_id_stage #(
     .csr_lsmseed_idx_o(csr_lsmseed_idx_o),
     .sec_imm_i_type_o(sec_imm_i_type),
     .sec_imm_s_type_o(sec_imm_s_type),
-    .rf_sec_ers_o(rf_sec_ers_o),
     // -- eliminate     
 
     .clk_i (clk_i),
