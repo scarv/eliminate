@@ -32,7 +32,6 @@ module ibex_id_stage #(
   output logic                      rf_sec_bwlogic_first_cycle_o,
   output logic                      lsu_sec_load_o,
   output logic                      lsu_sec_store_o,
-  output logic [31:0]               rf_sec_ers_o,
   // -- eliminate 
 
   input  logic                      clk_i,
@@ -255,6 +254,11 @@ module ibex_id_stage #(
   logic [31:0] imm_j_type;
   logic [31:0] zimm_rs1_type;
 
+  // ++ eliminate 
+  logic [31:0] sec_imm_i_type;
+  logic [31:0] sec_imm_s_type;
+  // -- eliminate 
+
   logic [31:0] imm_a;       // contains the immediate for operand b
   logic [31:0] imm_b;       // contains the immediate for operand b
 
@@ -387,6 +391,11 @@ module ibex_id_stage #(
     // Full main ALU immediate MUX for Operand B
     always_comb begin : immediate_b_mux
       unique case (imm_b_mux_sel)
+        // ++ eliminate 
+        SEC_IMM_B_I:     imm_b = sec_imm_i_type;
+        SEC_IMM_B_S:     imm_b = sec_imm_s_type;
+        IMM_B_MINUS4:    imm_b = 32'hffff_fffc; // -4 in hex
+        // -- eliminate 
         IMM_B_I:         imm_b = imm_i_type;
         IMM_B_S:         imm_b = imm_s_type;
         IMM_B_B:         imm_b = imm_b_type;
@@ -394,9 +403,6 @@ module ibex_id_stage #(
         IMM_B_J:         imm_b = imm_j_type;
         IMM_B_INCR_PC:   imm_b = instr_is_compressed_i ? 32'h2 : 32'h4;
         IMM_B_INCR_ADDR: imm_b = 32'h4;
-        // ++ eliminate 
-        IMM_B_MINUS4:    imm_b = 32'hffff_fffc; // -4 in hex
-        // -- eliminate
         default:         imm_b = 32'h4;
       endcase
     end
@@ -459,9 +465,10 @@ module ibex_id_stage #(
     .sec_bwlogic_o(sec_bwlogic),
     .sec_load_o(sec_load),
     .sec_store_o(sec_store),
-    .rf_sec_ers_o(rf_sec_ers_o),
     .sec_insn_first_two_cycles_i(sec_insn_first_two_cycles),
     .sec_insn_first_four_cycles_i(sec_insn_first_four_cycles),
+    .sec_imm_i_type_o(sec_imm_i_type),
+    .sec_imm_s_type_o(sec_imm_s_type),
     // -- eliminate 
 
     .clk_i (clk_i),
@@ -1009,6 +1016,7 @@ module ibex_id_stage #(
   // a custom secure store/load instruction can stall ID stage for multicycles because of `stall_mem`
   assign lsu_sec_store_o        = sec_store;
   assign lsu_sec_load_o         = sec_load;
+  
   // -- eliminate
 
   // Generally illegal instructions have no reason to stall, however they must still stall waiting

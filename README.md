@@ -1,4 +1,4 @@
-# eLIMInate: a Leakage-aware ISE for Masked Implementation
+# eLIMInate: a Leakage-focused ISE for Masked Implementation
 
 [Ibex core](https://github.com/lowRISC/ibex) is served as the host core for this work.
 All the modifications to the original Ibex core (RTL files) are well-marked with
@@ -117,8 +117,6 @@ The non-leakage evaluation of ISE is done by using [Coco](https://github.com/IAI
 | `sec.srli`  |     &check; |     &check; |      2  |
 | `sec.lw`    |     &check; |     &check; |      6  |
 | `sec.sw`    |     &check; |     &check; |      4  |
-| `sec.zlo`   |     &check; |          -  |      1  |
-| `sec.zhi`   |     &check; |          -  |      1  |
 
 ### Latency-optimised (LO) version 
 
@@ -134,8 +132,6 @@ The non-leakage evaluation of ISE is done by using [Coco](https://github.com/IAI
 | `sec.srli`  |     &check; |     &check; |      1  |
 | `sec.lw`    |     &check; |     &check; |      2  |
 | `sec.sw`    |     &check; |     &check; |      2  |
-| `sec.zlo`   |     &check; |          -  |      1  |
-| `sec.zhi`   |     &check; |          -  |      1  |
 
 ### Hardware overhead (Vivado 2019.1)
 
@@ -144,9 +140,7 @@ The non-leakage evaluation of ISE is done by using [Coco](https://github.com/IAI
 | Ibex                   |  2363  |  3602  |    10  |
 | Ibex + AO class-1      |  2365  |  3565  |    10  |
 | Ibex + AO class-1+2    |  2365  |  3847  |    10  |
-| Ibex + AO class-1+2+3  |  2366  |  4268  |    10  |
 | Ibex + LO class-1      |  2585  |  4829  |    10  |
 | Ibex + LO class-1+2    |  2713  |  5000  |    10  |
-| Ibex + LO class-1+2+3  |  2745  |  7008  |    10  |
 
 <!--- ==================================================================== --->

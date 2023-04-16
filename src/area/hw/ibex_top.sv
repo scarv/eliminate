@@ -157,7 +157,6 @@ module ibex_top import ibex_pkg::*; #(
 
   // ++ eliminate 
   logic                        rf_sec_bwlogic_first_cycle;
-  logic [31:0]                 rf_sec_ers;
   // -- eliminate 
 
   // Clock signals
@@ -314,7 +313,6 @@ module ibex_top import ibex_pkg::*; #(
   ) u_ibex_core (
     // ++ eliminate 
     .rf_sec_bwlogic_first_cycle_o(rf_sec_bwlogic_first_cycle),
-    .rf_sec_ers_o(rf_sec_ers),
     // -- eliminate 
 
     .clk_i(clk),
@@ -433,7 +431,6 @@ module ibex_top import ibex_pkg::*; #(
     ) register_file_i (
       // ++ eliminate 
       .sec_bwlogic_first_cycle_i(rf_sec_bwlogic_first_cycle),
-      .sec_ers_i(rf_sec_ers),
       // -- eliminate 
 
       .clk_i (clk),

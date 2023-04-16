@@ -19,7 +19,6 @@ module ibex_register_file_ff #(
 ) (
   // ++ eliminate 
   input  logic                 sec_bwlogic_first_cycle_i,
-  input  logic [31:0]          sec_ers_i,
   // -- eliminate 
 
   // Clock and Reset
@@ -89,8 +88,6 @@ module ibex_register_file_ff #(
     logic unused_strobe;
     assign unused_strobe = we_a_dec[0]; // this is never read from in this case
     assign err_o = 1'b0;
-    logic unused_strobe_1;
-    assign unused_strobe_1 = sec_ers_i[0];
   end
 
   // No flops for R0 as it's hard-wired to 0
@@ -100,7 +97,7 @@ module ibex_register_file_ff #(
     always_ff @(posedge clk_i or negedge rst_ni) begin
       // ++ eliminate
       // if (!rst_ni) begin
-      if ((!rst_ni) | sec_ers_i[i]) begin
+      if (!rst_ni) begin
         rf_reg_q <= WordZeroVal;
       end else if (we_a_dec[i]) begin
         rf_reg_q <= (sec_bwlogic_first_cycle_i) ? WordZeroVal : wdata_a_i;

@@ -348,7 +348,6 @@ module ibex_lockstep import ibex_pkg::*; #(
   ) u_shadow_core (
     // ++ eliminate 
     .rf_sec_bwlogic_first_cycle_o    (shadow_inputs_q[0].rf_sec_bwlogic_first_cycle_o),
-    .rf_sec_ers_o                    (shadow_inputs_q[0].rf_sec_ers_o),
     // -- eliminate
 
     .clk_i               (clk_i),

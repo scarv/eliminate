@@ -46,7 +46,6 @@ module ibex_core import ibex_pkg::*; #(
 ) (
   // ++ eliminate 
   output logic                         rf_sec_bwlogic_first_cycle_o,
-  output logic [31:0]                  rf_sec_ers_o,
   // -- eliminate 
 
   // Clock and Reset
@@ -553,7 +552,6 @@ module ibex_core import ibex_pkg::*; #(
     .rf_sec_bwlogic_first_cycle_o(rf_sec_bwlogic_first_cycle_o),
     .lsu_sec_load_o(lsu_sec_load),
     .lsu_sec_store_o(lsu_sec_store),
-    .rf_sec_ers_o(rf_sec_ers_o),
     // -- eliminate
     
     .clk_i (clk_i),
