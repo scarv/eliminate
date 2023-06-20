@@ -46,6 +46,8 @@ The performance evaluation of ISE is done with using [Ibex Demo System](https://
 
     - Config the file `rtl/system/ibex_demo_system.sv` to use a flipflop-based register file (i.e., at line 228 modifying `ibex_pkg::RegFileFPGA` to `ibex_pkg::RegFileFF`).
 
+    - For area-optimised implementation, edit the file `vendor/lowrisc_ibex/ibex_core.core` to add `- rtl/ibex_lsm_generator.sv` and `- rtl/keccak_f100_2rounds.sv` under the section `filesets:files_rtl:files`, and edit the file `vendor/lowrisc_ibex/ibex_pkg.core` to add `- rtl/keccak_pkg.sv` under the section `filesets:files_rtl:files`.
+
   - Using the patch
 
     - **TBA**
