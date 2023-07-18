@@ -358,7 +358,7 @@ int main()
       puts("sec.sb        takes   "); 
       puthex(x[12]);
       puts(" cycles \n");
-      puts("sec.lb        takes   "); 
+      puts("sec.lbu       takes   "); 
       puthex(x[13]);
       puts(" cycles \n");
       puts("-------------------------------------------\n");
