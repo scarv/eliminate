@@ -304,7 +304,29 @@ module ibex_decoder #(
           end
           default: illegal_insn = 1'b1;
         endcase
-      end 
+      end
+
+      ///////////////////////
+      // SECURE ARITHMETIC //
+      ///////////////////////
+
+      OPCODE_SEC_ARTH: begin // custom secure arithmetic instructions  
+        rf_ren_a_o            = 1'b1;
+        rf_ren_b_o            = 1'b1; // register-register
+        sec_bwlogic_o         = 1'b1; 
+        rf_we                 = 1'b1;
+
+        unique case (instr[14:12])
+          3'b000,
+          3'b001: begin // sec.add/sub instructions 
+            unique case (instr[31:25]) 
+              7'b000_0000: illegal_insn = 1'b0;
+              default:     illegal_insn = 1'b1;
+            endcase 
+          end
+          default: illegal_insn = 1'b1;
+        endcase  
+      end
 
       ///////////////////////////
       // SECURE LOAD AND STORE //
@@ -313,20 +335,20 @@ module ibex_decoder #(
       OPCODE_SEC_LDST: begin // custom secure load and store instructions
         rf_ren_a_o            = 1'b1;   
 
-        if (instr[14:12] == 3'b000) begin // secure load 
+        if ((instr[14:12] == 3'b000) || (instr[14:12] == 3'b010)) begin // secure load 
           sec_load_o          = 1'b1;
           illegal_insn        = 1'b0;
           data_req_o          = 1'b1;
-          data_type_o         = 2'b00;  // word size
+          data_type_o         = (instr[13] == 1'0) ? 2'b00 : 2'b10; // word or byte  
           // first two cycles are essentially used by a normal store;
           // then next four cycles are essentially used by two normal loads 
           data_we_o           = sec_insn_first_two_cycles_i;
-        end else if (instr[14:12] == 3'b001) begin // secure store
+        end else if ((instr[14:12] == 3'b001) || (instr[14:12] == 3'b011)) begin // secure store
           sec_store_o         = 1'b1;
           rf_ren_b_o          = 1'b1;
           data_req_o          = 1'b1;
           data_we_o           = 1'b1;   // store 
-          data_type_o         = 2'b00;  // word size
+          data_type_o         = (instr[13] == 1'0) ? 2'b00 : 2'b10; // word or byte  
           illegal_insn        = 1'b0;
         end else begin 
           illegal_insn        = 1'b1;
@@ -822,6 +844,21 @@ module ibex_decoder #(
         endcase
       end
 
+      ///////////////////////
+      // SECURE ARITHMETIC //
+      ///////////////////////
+
+      OPCODE_SEC_ARTH: begin // custom secure arithmetic instructions 
+        alu_op_a_mux_sel_o  = OP_A_REG_A; 
+        alu_op_b_mux_sel_o  = OP_B_REG_B;
+
+        unique case (instr[14:12])
+          3'b000: alu_operator_o = ALU_ADD; // sec.add
+          3'b001: alu_operator_o = ALU_SUB; // sec.sub
+          default: ;
+        endcase 
+      end
+
       ///////////////////////////
       // SECURE LOAD AND STORE //
       /////////////////////////// 
@@ -831,7 +868,8 @@ module ibex_decoder #(
         alu_operator_o      = ALU_ADD;
 
           unique case (instr[14:12]) 
-            3'b000: begin // secure load
+            3'b000,
+            3'b010: begin // secure load
               if (sec_insn_first_four_cycles_i) begin 
                 // store 0 to the stack first, then load it again from the stack 
                 // to flush the load/store buffer
@@ -843,7 +881,8 @@ module ibex_decoder #(
                 imm_b_mux_sel_o            = SEC_IMM_B_I;
               end
             end
-            3'b001: begin // secure store 
+            3'b001,
+            3'b011: begin // secure store 
               alu_op_b_mux_sel_o         = OP_B_IMM;
               imm_b_mux_sel_o            = SEC_IMM_B_S;
             end

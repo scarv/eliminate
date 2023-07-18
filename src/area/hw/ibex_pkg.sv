@@ -60,6 +60,7 @@ package ibex_pkg;
     // ++ eliminate
     OPCODE_SEC_BWLG = 7'h0b,  // CUSTOM_0: secure BitWise-LoGical instructions 
     OPCODE_SEC_LDST = 7'h2b,  // CUSTOM_1: secure LoaD and STore instructions
+    OPCODE_SEC_ARTH = 7'h5b,  // CUSTOM_2: secure ARiTHmetic instructions 
     // -- eliminate  
     OPCODE_LOAD     = 7'h03,
     OPCODE_MISC_MEM = 7'h0f,
