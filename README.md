@@ -117,8 +117,12 @@ The security evaluation (i.e., no leakage stemming from overwriting) of ISE is d
 | `sec.xori`  |     &check; |  &check; |      2  |
 | `sec.slli`  |     &check; |  &check; |      2  |
 | `sec.srli`  |     &check; |  &check; |      2  |
+| `sec.add`   |     &check; |          |      2  |
+| `sec.sub`   |     &check; |          |      2  |
 | `sec.lw`    |     &check; |  &check; |      6  |
 | `sec.sw`    |     &check; |  &check; |      4  |
+| `sec.lbu`   |     &check; |          |      6  |
+| `sec.sb`    |     &check; |          |      4  |
 
 ### Latency-Optimised (LO) version 
 
@@ -132,8 +136,12 @@ The security evaluation (i.e., no leakage stemming from overwriting) of ISE is d
 | `sec.xori`  |     &check; |  &check; |      1  |
 | `sec.slli`  |     &check; |  &check; |      1  |
 | `sec.srli`  |     &check; |  &check; |      1  |
+| `sec.add`   |             |          |      1  |
+| `sec.sub`   |             |          |      1  |
 | `sec.lw`    |     &check; |  &check; |      2  |
 | `sec.sw`    |     &check; |  &check; |      2  |
+| `sec.lbu`   |             |          |      2  |
+| `sec.sb`    |             |          |      2  |
 
 ### Hardware overhead (Vivado 2019.1)
 

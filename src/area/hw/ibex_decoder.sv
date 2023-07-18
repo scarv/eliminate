@@ -339,7 +339,7 @@ module ibex_decoder #(
           sec_load_o          = 1'b1;
           illegal_insn        = 1'b0;
           data_req_o          = 1'b1;
-          data_type_o         = (instr[13] == 1'0) ? 2'b00 : 2'b10; // word or byte  
+          data_type_o         = (instr[13] == 1'b0) ? 2'b00 : 2'b10; // word or byte  
           // first two cycles are essentially used by a normal store;
           // then next four cycles are essentially used by two normal loads 
           data_we_o           = sec_insn_first_two_cycles_i;
@@ -348,7 +348,7 @@ module ibex_decoder #(
           rf_ren_b_o          = 1'b1;
           data_req_o          = 1'b1;
           data_we_o           = 1'b1;   // store 
-          data_type_o         = (instr[13] == 1'0) ? 2'b00 : 2'b10; // word or byte  
+          data_type_o         = (instr[13] == 1'b0) ? 2'b00 : 2'b10; // word or byte  
           illegal_insn        = 1'b0;
         end else begin 
           illegal_insn        = 1'b1;

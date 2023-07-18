@@ -9,10 +9,14 @@
 // extern void sec_xori_test_asm(uint32_t *r, uint32_t *a);
 // extern void sec_slli_test_asm(uint32_t *r, uint32_t *a);
 // extern void sec_srli_test_asm(uint32_t *r, uint32_t *a);
+// extern void sec_add_test_asm(uint32_t *r, uint32_t *a, uint32_t *b);
+// extern void sec_sub_test_asm(uint32_t *r, uint32_t *a, uint32_t *b);
 
 // class-2 
 // extern void sec_lw_test_asm(uint32_t *r);
 // extern void sec_sw_test_asm(uint32_t *r);
+// extern void sec_lbu_test_asm(uint32_t *r);
+// extern void sec_sb_test_asm(uint32_t *r);
 
 // instruction latency measurement
 // extern void sec_insn_latency_measurement_asm(uint32_t *r);
@@ -62,6 +66,14 @@
 .insn i CUSTOM_0, 7, \rd, \rs1, \imm
 .endm
 
+.macro sec.add rd, rs1, rs2 
+.insn r CUSTOM_2, 0, 0, \rd, \rs1, \rs2
+.endm 
+
+.macro sec.sub rd, rs1, rs2 
+.insn r CUSTOM_2, 1, 0, \rd, \rs1, \rs2
+.endm 
+
 // class-2
 
 // get a Lower-Bit (LB) of the two MSBs
@@ -75,6 +87,14 @@
 
 .macro sec.sw  rs2, rs1, imm, ms
 .insn s CUSTOM_1, 1, \rs2, \imm+1024*LB(\ms)-2048*HB(\ms)(\rs1)
+.endm 
+
+.macro sec.lbu rd, rs1, imm, ms 
+.insn i CUSTOM_1, 2, \rd,  \imm+1024*LB(\ms)-2048*HB(\ms)(\rs1)
+.endm
+
+.macro sec.sb  rs2, rs1, imm, ms
+.insn s CUSTOM_1, 3, \rs2, \imm+1024*LB(\ms)-2048*HB(\ms)(\rs1)
 .endm 
 
 // micro-benchmarks
@@ -174,6 +194,30 @@ sec_srli_test_asm:
   sw       t0, 0(a0)
   ret 
 
+.global sec_add_test_asm 
+
+sec_add_test_asm:
+  lw       t5, 0(a1)
+  lw       t6, 0(a2)
+  li       t1, 0xDDDDDDDD   // facilitate the check in gtkwave
+  li       t0, 0x55555555   // facilitate the check in gtkwave
+  sec.add  t0, t5, t6
+  sec.add  t1, t5, t6
+  sw       t0, 0(a0)
+  ret
+
+.global sec_sub_test_asm 
+
+sec_sub_test_asm:
+  lw       t5, 0(a1)
+  lw       t6, 0(a2)
+  li       t1, 0xDDDDDDDD   // facilitate the check in gtkwave
+  li       t0, 0x55555555   // facilitate the check in gtkwave
+  sec.sub  t0, t5, t6
+  sec.sub  t1, t5, t6
+  sw       t0, 0(a0)
+  ret 
+
 // class-2
 
 .global sec_sw_test_asm
@@ -201,6 +245,34 @@ sec_lw_test_asm:
   sw       t0, 8(a0)
   li       t0, 0x123
   sec.lw   t0, a0,12, 0
+  sw       t0, 12(a0)
+  ret
+
+.global sec_sb_test_asm
+sec_sb_test_asm:
+  li       t1, 0x89ABCDEF
+  li       t0, 0x01234567
+  sec.sb   t0, a0,  0, 0
+  sec.sb   t1, a0,  4, 1
+  li       t1, 0x01234567
+  li       t0, 0x89ABCDEF
+  sec.sb   t1, a0,  8, 2
+  sec.sb   t0, a0, 12, 3
+  ret
+
+.global sec_lbu_test_asm
+sec_lbu_test_asm:
+  li       t0, 0x123
+  sec.lbu  t0, a0, 0, 3
+  sw       t0, 0(a0)
+  li       t0, 0x123
+  sec.lbu  t0, a0, 4, 2
+  sw       t0, 4(a0)
+  li       t0, 0x123
+  sec.lbu  t0, a0, 8, 1
+  sw       t0, 8(a0)
+  li       t0, 0x123
+  sec.lbu  t0, a0,12, 0
   sw       t0, 12(a0)
   ret
 
@@ -273,22 +345,56 @@ sec_insn_latency_measurement_asm:
   addi       t0, t0, -1  // `csrr` itself takes 1 cycle, which needs to be subtracted
   sw         t0, 28(a0)
 
-  // `sec.sw`
+  // `sec.add`
   read_cycle t0 
-  sec.sw     t2, a0, 32, 0 
+  sec.add    t2, t3, t4 
   read_cycle t1
   sub        t0, t1, t0 
   addi       t0, t0, -1  // `csrr` itself takes 1 cycle, which needs to be subtracted
   sw         t0, 32(a0)
 
+  // `sec.sub`
+  read_cycle t0 
+  sec.sub    t2, t3, t4 
+  read_cycle t1
+  sub        t0, t1, t0 
+  addi       t0, t0, -1  // `csrr` itself takes 1 cycle, which needs to be subtracted
+  sw         t0, 36(a0)
+
+  // `sec.sw`
+  read_cycle t0 
+  sec.sw     t2, a0, 40, 0 
+  read_cycle t1
+  sub        t0, t1, t0 
+  addi       t0, t0, -1  // `csrr` itself takes 1 cycle, which needs to be subtracted
+  sw         t0, 40(a0)
+
   // `sec.lw`
   addi       sp, sp, -4
   read_cycle t0 
-  sec.lw     t2, a0, 36, 0 
+  sec.lw     t2, a0, 44, 0 
   read_cycle t1
   addi       sp, sp,  4
   sub        t0, t1, t0 
   addi       t0, t0, -1  // `csrr` itself takes 1 cycle, which needs to be subtracted
-  sw         t0, 36(a0)
+  sw         t0, 44(a0)
+
+  // `sec.sb`
+  read_cycle t0 
+  sec.sb     t2, a0, 48, 0 
+  read_cycle t1
+  sub        t0, t1, t0 
+  addi       t0, t0, -1  // `csrr` itself takes 1 cycle, which needs to be subtracted
+  sw         t0, 48(a0)
+
+  // `sec.lb`
+  addi       sp, sp, -4
+  read_cycle t0 
+  sec.lbu    t2, a0, 52, 0 
+  read_cycle t1
+  addi       sp, sp,  4
+  sub        t0, t1, t0 
+  addi       t0, t0, -1  // `csrr` itself takes 1 cycle, which needs to be subtracted
+  sw         t0, 52(a0)
 
   ret 
