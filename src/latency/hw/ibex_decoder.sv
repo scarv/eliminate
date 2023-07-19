@@ -262,16 +262,17 @@ module ibex_decoder #(
       OPCODE_SEC_LDST: begin // custom secure load and store instructions
         rf_ren_a_o          = 1'b1;
         data_req_o          = 1'b1;
-        data_type_o         = 2'b00; // word size
         sec_ldst_o          = 1'b1;
         csr_lsmseed_idx_o   = instr[31:30]; // 2 MSBs selects the lsmseed CSR to be used 
 
-        if (instr[14:12] == 3'b000) begin // secure load 
+        if ((instr[14:12] == 3'b000) || (instr[14:12] == 3'b010)) begin // secure load 
           data_we_o         = 1'b0; // load 
+          data_type_o       = (instr[13] == 1'b0) ? 2'b00 : 2'b10; // word or byte
           illegal_insn      = 1'b0;
-        end else if (instr[14:12] == 3'b001) begin // secure store 
+        end else if ((instr[14:12] == 3'b001) || (instr[14:12] == 3'b011)) begin // secure store 
           rf_ren_b_o        = 1'b1;
           data_we_o         = 1'b1; // store
+          data_type_o       = (instr[13] == 1'b0) ? 2'b00 : 2'b10; // word or byte
           illegal_insn      = 1'b0;
         end else begin 
           illegal_insn      = 1'b1; 
@@ -735,9 +736,9 @@ module ibex_decoder #(
 
       // ++ eliminate 
 
-      ////////////////////
-      // SEC load/store //
-      ////////////////////
+      ///////////////////////////
+      // SECURE LOAD AND STORE //
+      ///////////////////////////
 
       OPCODE_SEC_LDST: begin
         alu_op_a_mux_sel_o  = OP_A_REG_A;
@@ -745,8 +746,10 @@ module ibex_decoder #(
         alu_operator_o      = ALU_ADD;
         
         unique case (instr_alu[14:12])
-          3'b000: imm_b_mux_sel_o     = SEC_IMM_B_I;
-          3'b001: imm_b_mux_sel_o     = SEC_IMM_B_S;
+          3'b000,
+          3'b010: imm_b_mux_sel_o     = SEC_IMM_B_I;
+          3'b001,
+          3'b011: imm_b_mux_sel_o     = SEC_IMM_B_S;
           default: ;
         endcase
       end

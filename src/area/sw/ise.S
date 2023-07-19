@@ -370,11 +370,9 @@ sec_insn_latency_measurement_asm:
   sw         t0, 40(a0)
 
   // `sec.lw`
-  addi       sp, sp, -4
   read_cycle t0 
   sec.lw     t2, a0, 44, 0 
   read_cycle t1
-  addi       sp, sp,  4
   sub        t0, t1, t0 
   addi       t0, t0, -1  // `csrr` itself takes 1 cycle, which needs to be subtracted
   sw         t0, 44(a0)
@@ -387,12 +385,10 @@ sec_insn_latency_measurement_asm:
   addi       t0, t0, -1  // `csrr` itself takes 1 cycle, which needs to be subtracted
   sw         t0, 48(a0)
 
-  // `sec.lb`
-  addi       sp, sp, -4
+  // `sec.lbu`
   read_cycle t0 
   sec.lbu    t2, a0, 52, 0 
   read_cycle t1
-  addi       sp, sp,  4
   sub        t0, t1, t0 
   addi       t0, t0, -1  // `csrr` itself takes 1 cycle, which needs to be subtracted
   sw         t0, 52(a0)

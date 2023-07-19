@@ -519,6 +519,7 @@ module ibex_load_store_unit #(
   logic [31:0] data_rdata_masked;
   logic [31:0] data_wdata_masked;
   logic [31:0] data_lsm;
+  logic [31:0] data_rdata_lsm;
 
   ibex_lsm_generator ibex_lsm_generator_i (
     .data_addr_i(data_addr_o),
@@ -526,7 +527,10 @@ module ibex_load_store_unit #(
     .data_lsm_o(data_lsm)
   );
 
-  assign data_rdata_masked = data_rdata_ext ^ data_lsm;
+  // form the correct read data mask
+  assign data_rdata_lsm = (data_type_q == 2'b10) ? {24'b0, data_lsm[7:0]} : data_lsm; 
+  // unmask
+  assign data_rdata_masked = data_rdata_ext ^ data_rdata_lsm;
 
   // output to register file
   // assign lsu_rdata_o = data_rdata_ext;

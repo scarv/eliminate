@@ -136,12 +136,12 @@ The security evaluation (i.e., no leakage stemming from overwriting) of ISE is d
 | `sec.xori`  |     &check; |  &check; |      1  |
 | `sec.slli`  |     &check; |  &check; |      1  |
 | `sec.srli`  |     &check; |  &check; |      1  |
-| `sec.add`   |             |          |      1  |
-| `sec.sub`   |             |          |      1  |
+| `sec.add`   |     &check; |          |      1  |
+| `sec.sub`   |     &check; |          |      1  |
 | `sec.lw`    |     &check; |  &check; |      2  |
 | `sec.sw`    |     &check; |  &check; |      2  |
-| `sec.lbu`   |             |          |      2  |
-| `sec.sb`    |             |          |      2  |
+| `sec.lbu`   |     &check; |          |      2  |
+| `sec.sb`    |     &check; |          |      2  |
 
 ### Hardware overhead (Vivado 2019.1)
 
