@@ -44,14 +44,23 @@ module ibex_register_file_fpga #(
   localparam int ADDR_WIDTH = RV32E ? 4 : 5;
   localparam int NUM_WORDS = 2 ** ADDR_WIDTH;
 
-  logic [DataWidth-1:0] mem[NUM_WORDS];
+  // ++ eliminate 
+  // logic [DataWidth-1:0] mem[NUM_WORDS];
+  logic [DataWidth-1:0] mem[NUM_WORDS+1];   // plus one idle register
+  logic [          5:0] idx[NUM_WORDS  ];   // index look-up table
+  logic [          5:0] idle;               // the index of idle register      
+  // -- eliminate 
   logic we; // write enable if writing to any register other than R0
 
+  // ++ eliminate
   // async_read a
-  assign rdata_a_o = (raddr_a_i == '0) ? '0 : mem[raddr_a_i];
+  // assign rdata_a_o = (raddr_a_i == '0) ? '0 : mem[raddr_a_i];
+  assign rdata_a_o = (raddr_a_i == '0) ? '0 : mem[idx[raddr_a_i]];
 
   // async_read b
-  assign rdata_b_o = (raddr_b_i == '0) ? '0 : mem[raddr_b_i];
+  // assign rdata_b_o = (raddr_b_i == '0) ? '0 : mem[raddr_b_i];
+  assign rdata_b_o = (raddr_b_i == '0) ? '0 : mem[idx[raddr_b_i]];
+  // -- eliminate
 
   // we select
   assign we = (waddr_a_i == '0) ? 1'b0 : we_a_i;
@@ -72,7 +81,13 @@ module ibex_register_file_fpga #(
   // write procedure.
   always @(posedge clk_i) begin : sync_write
     if (we == 1'b1) begin
-      mem[waddr_a_i] <= wdata_a_i;
+      // ++ eliminate 
+      // mem[waddr_a_i] <= wdata_a_i;
+      mem[idle]           <= wdata_a_i;       // write to the idle register
+      mem[idx[waddr_a_i]] <= WordZeroVal;     // clear the original GPR
+      idx[waddr_a_i]      <= idle;            // new GPR 
+      idle                <= idx[waddr_a_i];  // new idle register 
+      // -- eliminate
     end
   end : sync_write
 
@@ -80,7 +95,12 @@ module ibex_register_file_fpga #(
   initial begin
     for (int k = 0; k < NUM_WORDS; k++) begin
       mem[k] = WordZeroVal;
+    // ++ eliminate 
+      idx[k] = k;
     end
+    mem[k+1] = WordZeroVal; // idle register 
+    idle     = NUM_WORDS;   // the last PR is idle register
+    // -- eliminate
   end
 
   // Reset not used in this register file version
