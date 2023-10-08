@@ -96,10 +96,10 @@ module ibex_register_file_fpga #(
     for (int k = 0; k < NUM_WORDS; k++) begin
       mem[k] = WordZeroVal;
     // ++ eliminate 
-      idx[k] = k;
+      idx[k] = {1'b0, k[4:0]};
     end
-    mem[k+1] = WordZeroVal; // idle register 
-    idle     = NUM_WORDS;   // the last PR is idle register
+    mem[NUM_WORDS] = WordZeroVal;     // idle register 
+    idle           = NUM_WORDS[5:0];  // the last PR is idle register
     // -- eliminate
   end
 
