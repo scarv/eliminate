@@ -458,6 +458,10 @@ module ibex_top import ibex_pkg::*; #(
       .WrenCheck        (RegFileWrenCheck),
       .WordZeroVal      (RegFileDataWidth'(prim_secded_pkg::SecdedInv3932ZeroWord))
     ) register_file_i (
+      // ++ eliminate 
+      .sec_bwlogic_first_cycle_i(rf_sec_bwlogic_first_cycle),
+      // -- eliminate
+
       .clk_i (clk),
       .rst_ni(rst_ni),
 
