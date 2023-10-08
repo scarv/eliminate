@@ -18,6 +18,10 @@ module ibex_register_file_fpga #(
     parameter bit                   WrenCheck         = 0,
     parameter logic [DataWidth-1:0] WordZeroVal       = '0
 ) (
+  // ++ eliminate 
+  input  logic                 sec_bwlogic_first_cycle_i,
+  // -- eliminate 
+
   // Clock and Reset
   input  logic                 clk_i,
   input  logic                 rst_ni,
@@ -72,7 +76,10 @@ module ibex_register_file_fpga #(
   // write procedure.
   always @(posedge clk_i) begin : sync_write
     if (we == 1'b1) begin
-      mem[waddr_a_i] <= wdata_a_i;
+      // ++ eliminate 
+      // mem[waddr_a_i] <= wdata_a_i;
+      mem[waddr_a_i] <= (sec_bwlogic_first_cycle_i) ? WordZeroVal : wdata_a_i;
+      // -- eliminate 
     end
   end : sync_write
 
