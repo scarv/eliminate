@@ -22,7 +22,7 @@
 // extern void sec_insn_latency_measurement_asm(uint32_t *r);
 
 
-// becasue there is a bug in ibex-demo-system re. `rdcycle` instruction; 
+// because there is a bug in ibex-demo-system re. `rdcycle` instruction; 
 // we therefore use `csrr` to read the `mcycle` CSR directly;  
 // the address of Machine Cycle Counter (mcycle) CSR is "0xB00"
 .macro read_cycle rd 

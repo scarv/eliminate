@@ -1,9 +1,9 @@
 # eLIMInate: a Leakage-focused ISE for Masked Implementation
 
-[Ibex core](https://github.com/lowRISC/ibex) is served as the host core for this work.
-All the modifications to the original Ibex core (RTL files) are well-marked with
-`// ++ eliminate` and `// -- eliminate`, which facilitates 
-the check by users. 
+[Ibex core](https://github.com/lowRISC/ibex) serves as the host core for this
+work. All the modifications to the original Ibex core (RTL files) are well
+annotated with `// ++ eliminate` and `// -- eliminate`, which facilitates the
+check by users. 
 
 <!--- ==================================================================== --->
 
