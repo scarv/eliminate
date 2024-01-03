@@ -885,8 +885,8 @@ module ibex_id_stage #(
         SEC_5TH_CYCLE: begin 
           unique case (1'b1)
             sec_load: begin
-              rf_we_raw               = 1'b1;  // allow to write the register file
-              sec_bwlogic_first_cycle = 1'b1;  // write 0 to the register 
+              // rf_we_raw               = 1'b1;  // allow to write the register file
+              // sec_bwlogic_first_cycle = 1'b1;  // write 0 to the register 
               id_fsm_d                = MULTI_CYCLE;
             end
             default: id_fsm_d         = FIRST_CYCLE;

@@ -1,4 +1,5 @@
-# registers: x5 (share), x7 (random), x12 (share) 
+# registers: x5 (share), x6 (random), x7 (random), x12 (share) 
 u_core.register_file_i.rf_reg_reg[176] = secret 0
+u_core.register_file_i.rf_reg_reg[208] = static_random
 u_core.register_file_i.rf_reg_reg[240] = static_random
 u_core.register_file_i.rf_reg_reg[400] = secret 0

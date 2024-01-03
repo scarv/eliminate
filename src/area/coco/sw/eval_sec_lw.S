@@ -17,6 +17,7 @@ li       x13, 0x20
 sw       x5,  0(x13)
 # overwrite a share with another share to check if there's now 
 # an architecutral leakage and/or a micro-architectural leakage
+and      x6, x6, x6
 sec.lw   x12, x13, 0, 0
 nop
 nop
