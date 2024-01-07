@@ -8,7 +8,9 @@ module ibex_lsm_generator (
   import keccak_pkg::k_state;
 
   k_state state_in, state_out;
-  logic [63:0] data_i = {lsmseed_i[31:0], data_addr_i[31:0]};
+  logic [63:0] data_i;
+  
+  assign data_i = {lsmseed_i[31:0], data_addr_i[31:0]};
 
   genvar x, y, i;
 
