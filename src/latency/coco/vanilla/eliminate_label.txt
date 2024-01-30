@@ -1,0 +1,5 @@
+# registers: x5 (share), x6 (random), x7 (random), x12 (share) 
+register_file_i.rf_reg[5] [16] = secret 0
+register_file_i.rf_reg[6] [16] = static_random
+register_file_i.rf_reg[7] [16] = static_random
+register_file_i.rf_reg[12] [16] = secret 0

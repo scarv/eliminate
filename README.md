@@ -86,7 +86,7 @@ The security evaluation (i.e., no leakage stemming from overwriting) of ISE is d
 
   - Manual modification
 
-    - Copy all the files in `src/[ara/latency]/coco/hw/` and replace the original files in `extern/coco-ibex/rtl/`.
+    - Copy all the files in `src/[area/latency]/coco/hw/` and replace the original files in `extern/coco-ibex/rtl/`.
     
     - Copy the software micro-benchmark folder `src/[area/latency]/coco/sw`, and paste it to `extern/coco-alma/examples/ibex/programs/` and rename it to `eliminate`.
 
@@ -100,57 +100,5 @@ The security evaluation (i.e., no leakage stemming from overwriting) of ISE is d
 
   - Using the patch 
     - **TBA**  
-
-<!--- ==================================================================== --->
-
-## Instruction evaluation
-
-### Area-Optimised (AO) version 
-
-| Instruction | Computation | Security | Latency | 
-| :---------: | :---------: | :------: | :-----: |
-| `sec.and`   |     &check; |  &check; |      2  |
-| `sec.andi`  |     &check; |  &check; |      2  |
-| `sec.or`    |     &check; |  &check; |      2  |
-| `sec.ori`   |     &check; |  &check; |      2  |
-| `sec.xor`   |     &check; |  &check; |      2  |
-| `sec.xori`  |     &check; |  &check; |      2  |
-| `sec.slli`  |     &check; |  &check; |      2  |
-| `sec.srli`  |     &check; |  &check; |      2  |
-| `sec.add`   |     &check; |          |      2  |
-| `sec.sub`   |     &check; |          |      2  |
-| `sec.lw`    |     &check; |  &check; |      6  |
-| `sec.sw`    |     &check; |  &check; |      4  |
-| `sec.lbu`   |     &check; |          |      6  |
-| `sec.sb`    |     &check; |          |      4  |
-
-### Latency-Optimised (LO) version 
-
-| Instruction | Computation | Security | Latency | 
-| :---------: | :---------: | :------: | :-----: |
-| `sec.and`   |     &check; |  &check; |      1  |
-| `sec.andi`  |     &check; |  &check; |      1  |
-| `sec.or`    |     &check; |  &check; |      1  |
-| `sec.ori`   |     &check; |  &check; |      1  |
-| `sec.xor`   |     &check; |  &check; |      1  |
-| `sec.xori`  |     &check; |  &check; |      1  |
-| `sec.slli`  |     &check; |  &check; |      1  |
-| `sec.srli`  |     &check; |  &check; |      1  |
-| `sec.add`   |     &check; |          |      1  |
-| `sec.sub`   |     &check; |          |      1  |
-| `sec.lw`    |     &check; |  &check; |      2  |
-| `sec.sw`    |     &check; |  &check; |      2  |
-| `sec.lbu`   |     &check; |          |      2  |
-| `sec.sb`    |     &check; |          |      2  |
-
-### Hardware overhead (Vivado 2019.1)
-
-| Core                   |  Regs  |  LUTs  |  DSPs  | 
-| :--------------------  | :----: | :----: | :----: |
-| Ibex                   |  2363  |  3602  |    10  |
-| Ibex + AO class-1      |  2365  |  3565  |    10  |
-| Ibex + AO class-1+2    |  2365  |  3847  |    10  |
-| Ibex + LO class-1      |  2585  |  4829  |    10  |
-| Ibex + LO class-1+2    |  2713  |  5000  |    10  |
 
 <!--- ==================================================================== --->
